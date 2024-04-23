@@ -45,12 +45,14 @@ operation on objects.
         return video;
     }
 
+    @Transactional 
     @Override
     public Video save(Video video) {
         Video videoDB = entityManager.merge(video);
         return videoDB;
     }
 
+    @Transactional
     @Override
     public void deleteById(int id) {
         Video video = entityManager.find(Video.class, id);
