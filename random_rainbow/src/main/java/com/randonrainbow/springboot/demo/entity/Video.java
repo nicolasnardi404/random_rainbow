@@ -1,11 +1,15 @@
 package com.randonrainbow.springboot.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 // if the id will be initialized at the data base how do i define the contructor
 @Entity
+@Getter
+@Setter
 @Table(name="video")
 public class Video {
     @Id
@@ -20,11 +24,20 @@ public class Video {
     private String videoDescription;
     @Column(name="video_link")
     private String videoLink;
-   // private int duration;
-    //private boolean checked;
-    //private boolean approved;
+   private int duration;
+   private boolean checked;
+   private boolean approved;
 
     public Video(){
+    }
+
+    public Video(int idArtist, String title, String videoDescription, String videoLink) {
+        this.idArtist = idArtist;
+        this.title = title;
+        this.videoDescription = videoDescription;
+        this.videoLink = videoLink;
+        checked = false;
+        approved = false;
     }
 
     @Override
@@ -36,37 +49,5 @@ public class Video {
                 ", videoDescription='" + videoDescription + '\'' +
                 ", videoLink='" + videoLink + '\'' +
                 '}';
-    }
-
-    public Video(int idArtist, String title, String videoDescription, String videoLink) {
-        this.idArtist = idArtist;
-        this.title = title;
-        this.videoDescription = videoDescription;
-        this.videoLink = videoLink;
-    }
-
-
-    public String getVideoLink() {
-        return videoLink;
-    }
-
-    public String getVideoDescription() {
-        return videoDescription;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public int getIdArtist() {
-        return idArtist;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
