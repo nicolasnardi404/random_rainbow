@@ -8,17 +8,7 @@
 </head>
 <body>
 <div class="container">
-    <p>
-        User: <span sec:authentication="principal.username"></span>
-        <br><br>
-        Role(s): <span sec:authentication="principal.authorities"></span>
-    
-        <!-- display first name, last name and email -->
-        <div th:if="${session.user}" >
-            <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', Email: ' + ${session.user.email}"></p>
-        </div>
-    
-    </p>
+
     <h2>User Videos List</h2>
     <table class="table table-striped">
         <thead>

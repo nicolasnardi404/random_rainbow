@@ -2,11 +2,9 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
-import com.randomrainbow.springboot.demosecurity.service.UserService;
 import com.randomrainbow.springboot.demosecurity.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +29,7 @@ public class VideoController {
         return "list-videos";
     }
 
+    // THIS STILL DOESNT WORK
     @GetMapping("/profile")
     public String videosUser(@AuthenticationPrincipal User user, Model theModel) {
         int idUser = user.getId();

@@ -1,6 +1,5 @@
 package com.randomrainbow.springboot.demosecurity.dao;
 
-import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;

@@ -3,9 +3,6 @@ package com.randomrainbow.springboot.demosecurity.entity;
 import jakarta.persistence.*;
 import java.util.Collection;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 @Entity
 @Table(name = "user")
 public class User {
