@@ -1,34 +1,32 @@
 package com.randomrainbow.springboot.demosecurity.entity;
 
 import jakarta.persistence.*;
+
 // if the id will be initialized at the data base how do i define the contructor
 @Entity
 @Table(name = "videos", schema = "random_rainbow")
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
-    @Column(name="user_id")
+    @Column(name = "id_user")
     private int idUser;
-    @Column(name="title")
+    @Column(name = "title")
     private String title;
-    @Column(name="video_description")
+    @Column(name = "video_description")
     private String videoDescription;
-    @Column(name="video_link")
+    @Column(name = "video_link")
     private String videoLink;
-   private int duration;
-   private boolean checked;
-   private boolean approved;
+    private int duration;
+    private boolean checked;
+    private boolean approved;
 
-    public Video(){
+    public Video() {
     }
 
-    public Video(int idUser
-            , String title, String videoDescription, String videoLink) {
-        this.idUser
-                = idUser
-        ;
+    public Video(int idUser, String title, String videoDescription, String videoLink) {
+        this.idUser = idUser;
         this.title = title;
         this.videoDescription = videoDescription;
         this.videoLink = videoLink;

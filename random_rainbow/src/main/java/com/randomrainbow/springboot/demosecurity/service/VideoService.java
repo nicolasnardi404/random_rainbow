@@ -1,6 +1,5 @@
 package com.randomrainbow.springboot.demosecurity.service;
 
-
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 
 import java.util.List;
@@ -20,4 +19,6 @@ public interface VideoService {
     Video save(Video video);
 
     void deleteById(int id);
+
+    List<Video> findVideosByUser(int idUser);
 }

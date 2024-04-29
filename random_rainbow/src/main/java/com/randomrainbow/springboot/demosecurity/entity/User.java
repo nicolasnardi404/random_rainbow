@@ -3,6 +3,9 @@ package com.randomrainbow.springboot.demosecurity.entity;
 import jakarta.persistence.*;
 import java.util.Collection;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -10,7 +13,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private int id;
 
     @Column(name = "username")
     private String userName;
@@ -31,9 +34,7 @@ public class User {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
     public User() {
@@ -46,18 +47,18 @@ public class User {
     }
 
     public User(String userName, String password, boolean enabled,
-                Collection<Role> roles) {
+            Collection<Role> roles) {
         this.userName = userName;
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -129,4 +130,5 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+
 }
