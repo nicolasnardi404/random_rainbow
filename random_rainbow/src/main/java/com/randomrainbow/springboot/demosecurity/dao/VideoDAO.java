@@ -24,4 +24,6 @@ public interface VideoDAO {
 
     void deleteById(int id);
 
+    List<Video> findVideosByUser(int idUser);
+
 }

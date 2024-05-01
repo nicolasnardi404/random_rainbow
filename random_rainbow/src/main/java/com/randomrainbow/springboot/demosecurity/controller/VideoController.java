@@ -27,15 +27,6 @@ public class VideoController {
         return "list-videos";
     }
 
-    @GetMapping("/uservideos")
-    public String userVideos(@RequestParam("videoId") int idUser, Model theModel){
-        // Assuming videoService.findVideosByUserId takes a user ID and returns a list of videos
-        List<Video> videos = videoService.findVideosByUserId(idUser);
-        theModel.addAttribute("videos", videos);
-        return "user-videos";
-    }
-
-
     @GetMapping("/addNewVideo")
     public  String showFormAdd(Model theModel){
         Video video = new Video();

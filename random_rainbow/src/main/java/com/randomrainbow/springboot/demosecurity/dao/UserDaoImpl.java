@@ -21,7 +21,8 @@ public class UserDaoImpl implements UserDao {
 	public User findByUserName(String theUserName) {
 
 		// retrieve/read from database using username
-		TypedQuery<User> theQuery = entityManager.createQuery("from User where userName=:uName and enabled=true", User.class);
+		TypedQuery<User> theQuery = entityManager.createQuery("from User where userName=:uName and enabled=true",
+				User.class);
 		theQuery.setParameter("uName", theUserName);
 
 		User theUser = null;
@@ -41,6 +42,5 @@ public class UserDaoImpl implements UserDao {
 		// create the user ... finally LOL
 		entityManager.merge(theUser);
 	}
-
 
 }
