@@ -16,6 +16,8 @@ public interface VideoDAO {
 
     List<Video> findAll();
 
+    List<Video> findVideosByUserId(int userId);
+
     Video findById(int id);
 
     Video save(Video video);

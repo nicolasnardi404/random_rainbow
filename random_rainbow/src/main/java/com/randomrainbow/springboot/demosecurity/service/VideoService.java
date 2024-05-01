@@ -20,4 +20,6 @@ public interface VideoService {
     Video save(Video video);
 
     void deleteById(int id);
+
+    List<Video> findVideosByUserId(int userId);
 }

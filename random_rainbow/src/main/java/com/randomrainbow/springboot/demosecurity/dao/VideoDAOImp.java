@@ -33,6 +33,15 @@ operation on objects.
         List<Video> videos = theQuery.getResultList();
         return videos;
     }
+    @Override
+    public List<Video> findVideosByUserId(int userId) {
+        // TypedQuery is a query to execute a query against the database
+        TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v WHERE v.user.id = :userId", Video.class);
+        theQuery.setParameter("userId", userId);
+        List<Video> videos = theQuery.getResultList();
+        return videos;
+
+    }
 
     @Override
     public Video findById(int id) {

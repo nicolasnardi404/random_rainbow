@@ -35,4 +35,9 @@ public class VideoServiceImp implements VideoService{
     public void deleteById(int id) {
         videoDAO.deleteById(id);
     }
+
+    @Override
+    public List<Video> findVideosByUserId(int userId) {
+        return List.of();
+    }
 }

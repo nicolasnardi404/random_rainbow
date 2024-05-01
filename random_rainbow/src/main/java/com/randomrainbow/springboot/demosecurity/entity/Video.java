@@ -9,7 +9,7 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
-    @Column(name="user_id")
+    @Column(name="id_user")
     private int idUser;
     @Column(name="title")
     private String title;
@@ -24,11 +24,8 @@ public class Video {
     public Video(){
     }
 
-    public Video(int idUser
-            , String title, String videoDescription, String videoLink) {
-        this.idUser
-                = idUser
-        ;
+    public Video(int idUser, String title, String videoDescription, String videoLink) {
+        this.idUser = idUser;
         this.title = title;
         this.videoDescription = videoDescription;
         this.videoLink = videoLink;
