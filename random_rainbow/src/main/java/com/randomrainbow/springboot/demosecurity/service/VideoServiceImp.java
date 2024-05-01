@@ -1,6 +1,7 @@
 package com.randomrainbow.springboot.demosecurity.service;
 
 import com.randomrainbow.springboot.demosecurity.dao.VideoDAO;
+import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class VideoServiceImp implements VideoService{
     @Override
     public void deleteById(int id) {
         videoDAO.deleteById(id);
+    }
+
+    @Override
+    public List<Video> findVideosByUser(User idUser) {
+        return videoDAO.findVideosByUser(idUser);
     }
 }

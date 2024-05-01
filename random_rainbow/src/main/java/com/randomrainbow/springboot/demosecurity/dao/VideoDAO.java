@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.dao;
 
+import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 
 import java.util.List;
@@ -24,6 +25,6 @@ public interface VideoDAO {
 
     void deleteById(int id);
 
-    List<Video> findVideosByUser(int idUser);
+    List<Video> findVideosByUser(User idUser);
 
 }

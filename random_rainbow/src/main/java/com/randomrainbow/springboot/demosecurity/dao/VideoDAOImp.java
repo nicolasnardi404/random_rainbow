@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.dao;
 
+import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -36,15 +37,14 @@ class VideoDAOImp implements VideoDAO {
     @Override
     public List<Video> findVideosByUserId(int userId) {
         // TypedQuery is a query to execute a query against the database
-        TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v WHERE v.user.id = :userId", Video.class);
-        theQuery.setParameter("userId", userId);
+        TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v JOIN v.user u WHERE u.id = :idUserVideo", Video.class);
+        theQuery.setParameter("idUserVideo", userId); // Corrected parameter name to match the query
         List<Video> videos = theQuery.getResultList();
         return videos;
-
     }
 
     @Override
-    public List<Video> findVideosByUser(int idUser) {
+    public List<Video> findVideosByUser(User idUser) {
         TypedQuery<Video> theQuery = entityManager
                 .createQuery("SELECT v FROM Video v JOIN v.idUser u WHERE u = :idUserVideo", Video.class);
         theQuery.setParameter("idUserVideo", idUser);

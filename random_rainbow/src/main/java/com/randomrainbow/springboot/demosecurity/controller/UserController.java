@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import java.util.List;
 
+import com.randomrainbow.springboot.demosecurity.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,11 +25,12 @@ public class UserController {
     private VideoService videoService;
 
     @RequestMapping("/users/{idUser}/videos")
-    public String userProfile(@PathVariable("idUser") int idUser, Model theModel) {
+    public String userProfile(@PathVariable("idUser") User idUser, Model theModel) {
         theModel.addAttribute("idUser", idUser);
         System.out.println("THIS IS ID USER");
         System.out.println(idUser);
         List<Video> videos = videoService.findVideosByUser(idUser);
+        System.out.println(videos);
         theModel.addAttribute("videos", videos);
 
         return "user-interface";

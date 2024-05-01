@@ -7,33 +7,52 @@ import jakarta.persistence.*;
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private int id;
-    @Column(name="user_id")
-    private int idUser;
-    @Column(name="title")
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private User idUser;
+    @Column(name = "title")
     private String title;
-    @Column(name="video_description")
+    @Column(name = "video_description")
     private String videoDescription;
-    @Column(name="video_link")
+    @Column(name = "video_link")
     private String videoLink;
-   private int duration;
-   private boolean checked;
-   private boolean approved;
+    private int duration;
+    private boolean checked;
+    private boolean approved;
 
-    public Video(){
+    public Video() {
     }
 
-    public Video(int idUser
-            , String title, String videoDescription, String videoLink) {
-        this.idUser
-                = idUser
-        ;
-        this.title = title;
-        this.videoDescription = videoDescription;
-        this.videoLink = videoLink;
-        checked = false;
-        approved = false;
+    @Override
+    public String toString() {
+        return "Video{" +
+                "id=" + id +
+                ", user=" + idUser +
+                ", title='" + title + '\'' +
+                ", videoDescription='" + videoDescription + '\'' +
+                ", videoLink='" + videoLink + '\'' +
+                ", duration=" + duration +
+                ", checked=" + checked +
+                ", approved=" + approved +
+                '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return idUser;
+    }
+
+    public void setUser(User user) {
+        this.idUser = user;
     }
 
     public String getTitle() {
@@ -82,26 +101,5 @@ public class Video {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
-    }
-
-    @Override
-    public String toString() {
-        return "Video{" +
-                "id=" + id +
-                ", idUser" +
-                "=" + idUser
-                +
-                ", title='" + title + '\'' +
-                ", videoDescription='" + videoDescription + '\'' +
-                ", videoLink='" + videoLink + '\'' +
-                '}';
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
