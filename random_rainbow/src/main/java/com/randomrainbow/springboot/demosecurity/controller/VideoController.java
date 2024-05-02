@@ -41,7 +41,7 @@ public class VideoController {
     public String saveEmployee(@PathVariable("idUser") User idUser, @ModelAttribute("video") Video video) {
         video.setUser(idUser);
         videoService.save(video);
-        return "redirect:list";
+        return "redirect:/users/{idUser}/videos";
     }
 
     @GetMapping("/delete/{videoId}")
