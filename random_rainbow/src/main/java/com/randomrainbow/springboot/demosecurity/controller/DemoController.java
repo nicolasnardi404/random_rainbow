@@ -9,7 +9,7 @@ public class DemoController {
     @GetMapping("/")
     public String showHome() {
 
-        return "home-page";
+        return "home";
     }
 
     // add a request mapping for /leaders

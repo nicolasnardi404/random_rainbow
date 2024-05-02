@@ -43,7 +43,7 @@
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/videos/addNewVideo}"
+    <a th:href="@{/users/{userId}/videos/addNewVideo(userId=${session.user.id})}"
        class="btn btn-primary btn-sm mb-3">
         ADD NEW VIDEO
     </a>
