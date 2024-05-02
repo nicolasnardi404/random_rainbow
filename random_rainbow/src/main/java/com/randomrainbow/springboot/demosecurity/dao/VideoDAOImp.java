@@ -34,10 +34,12 @@ class VideoDAOImp implements VideoDAO {
         List<Video> videos = theQuery.getResultList();
         return videos;
     }
+
     @Override
     public List<Video> findVideosByUserId(int userId) {
         // TypedQuery is a query to execute a query against the database
-        TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v JOIN v.user u WHERE u.id = :idUserVideo", Video.class);
+        TypedQuery<Video> theQuery = entityManager
+                .createQuery("SELECT v FROM Video v JOIN v.user u WHERE u.id = :idUserVideo", Video.class);
         theQuery.setParameter("idUserVideo", userId); // Corrected parameter name to match the query
         List<Video> videos = theQuery.getResultList();
         return videos;

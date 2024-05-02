@@ -1,6 +1,5 @@
 package com.randomrainbow.springboot.demosecurity.service;
 
-
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 

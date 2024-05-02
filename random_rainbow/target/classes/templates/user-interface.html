@@ -30,11 +30,11 @@
             <td th:text="${video.checked} ? 'Yes' : 'No'"></td>
             <td th:text="${video.approved} ? 'Yes' : 'No'"></td>
             <td>
-                <a th:href="@{/videos/updateVideo(videoId=${video.id})}"
+                <a th:href="@{/users/{userId}/videos/updateVideo/(userId=${session.user.id})}"
                    class="btn btn-info btn-sm">
                     UPDATE
                 </a>
-                <a th:href="@{/videos/delete(videoId=${video.id})}"
+                <a th:href="@{/users/{userId}/videos/delete/{videoId}(videoId=${video.id}, userId=${session.user.id})}"
                    class="btn btn-danger btn-sm"
                    onclick="if (!(confirm('Are you sure you want to delete this video? This action cannot be undone'))) return false">
                     DELETE
@@ -43,7 +43,7 @@
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/videos/addNewVideo}"
+    <a th:href="@{/users/{userId}/videos/addNewVideo(userId=${session.user.id})}"
        class="btn btn-primary btn-sm mb-3">
         ADD NEW VIDEO
     </a>

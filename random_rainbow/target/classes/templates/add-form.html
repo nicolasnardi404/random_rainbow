@@ -12,11 +12,10 @@
 <div class="container">
   <hr>
   <h3>Add New Video</h3>
-  <form action="#" th:action="@{/videos/save}"
+  <form action="#" th:action="@{/users/{userId}/videos/save(userId=${session.user.id})}"
         th:object="${video}" method="POST">
     <!--Add hidden form field to handle the update-->
     <input type="hidden" th:field="*{id}">
-    
     <input type="text" th:field="*{title}"
            class="form-control mb-4 w-25" placeholder="Title">
     <input type="text" th:field="*{videoDescription}"

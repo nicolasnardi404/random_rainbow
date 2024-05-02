@@ -38,16 +38,17 @@ public class VideoController {
 
     @PostMapping("/save")
     // @ModelAttribute to solicitate the video class
-    public String saveEmployee(@ModelAttribute("video") Video video) {
+    public String saveEmployee(@PathVariable("idUser") User idUser, @ModelAttribute("video") Video video) {
+        video.setUser(idUser);
         videoService.save(video);
         return "redirect:list";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/delete/{videoId}")
     // @RequestParam because you need to solicitate the data
-    public String delete(@RequestParam("videoId") int theId) {
+    public String delete(@PathVariable("videoId") int theId) {
         videoService.deleteById(theId);
-        return "redirect:list";
+        return "redirect:/users/{idUser}/videos";
     }
 
     @GetMapping("/updateVideo")

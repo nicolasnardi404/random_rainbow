@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class VideoServiceImp implements VideoService{
+public class VideoServiceImp implements VideoService {
     public VideoDAO videoDAO;
 
     @Autowired
-    public VideoServiceImp(VideoDAO videoDAO){
-        this.videoDAO=videoDAO;
+    public VideoServiceImp(VideoDAO videoDAO) {
+        this.videoDAO = videoDAO;
     }
 
     @Override
