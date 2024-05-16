@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users/{idUser}/videos")
@@ -26,6 +27,17 @@ public class VideoController {
         List<Video> videos = videoService.findAll();
         theModel.addAttribute("videos", videos);
         return "list-videos";
+    }
+
+    @GetMapping("/addNewVideo/{videoId}")
+    public String showUpdateAdd(@PathVariable("idUser") long idUser, @PathVariable("videoId") Optional<Integer> videoId,
+            Model theModel) {
+        Video video = null;
+        video = videoService.findById(videoId.get());
+        System.out.println("Found video with ID: " + videoId.get());
+        theModel.addAttribute("video", video);
+        theModel.addAttribute("idUser", idUser);
+        return "add-form";
     }
 
     @GetMapping("/addNewVideo")
@@ -52,10 +64,13 @@ public class VideoController {
     }
 
     @GetMapping("/updateVideo")
-    public String updateVideo(@RequestParam("videoId") int theId, Model theModel) {
-        Video video = videoService.findById(theId);
+    public String updateVideo(@RequestParam("userId") long userId, @RequestParam("videoId") int videoId,
+            Model theModel) {
+        // Assuming you have a method to fetch the video based on videoId
+        Video video = videoService.findById(videoId);
         theModel.addAttribute("video", video);
-        return "add-form";
-
+        // Redirect to /addNewVideo including the videoId in the URL
+        return "redirect:/users/" + userId + "/videos/addNewVideo/" + videoId;
     }
+
 }
