@@ -10,77 +10,60 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/register")
+@RestController
+@RequestMapping("/api/register")
 public class RegistrationController {
 
-	private Logger logger = Logger.getLogger(getClass().getName());
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     private UserService userService;
 
-	@Autowired
-	public RegistrationController(UserService userService) {
-		this.userService = userService;
-	}
+    @Autowired
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@InitBinder
-	public void initBinder(WebDataBinder dataBinder) {
-		
-		StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
-		
-		dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
-	}	
-	
-	@GetMapping("/showRegistrationForm")
-	public String showMyLoginPage(Model theModel) {
-		
-		theModel.addAttribute("webUser", new WebUser());
-		
-		return "register/registration-form";
-	}
+    @InitBinder
+    public void initBinder(WebDataBinder dataBinder) {
+        StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
+        dataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
+    }
 
-	@PostMapping("/processRegistrationForm")
-	public String processRegistrationForm(
-			@Valid @ModelAttribute("webUser") WebUser theWebUser,
-			BindingResult theBindingResult,
-			HttpSession session, Model theModel) {
+    @PostMapping("/processRegistrationForm")
+    public ResponseEntity<?> processRegistrationForm(
+            @Valid @RequestBody WebUser theWebUser,
+            BindingResult theBindingResult,
+            HttpSession session) {
 
-		String userName = theWebUser.getUserName();
-		logger.info("Processing registration form for: " + userName);
-		
-		// form validation
-		 if (theBindingResult.hasErrors()){
-			 return "register/registration-form";
-		 }
+        String userName = theWebUser.getUserName();
+        logger.info("Processing registration form for: " + userName);
 
-		// check the database if user already exists
-        User existing = userService.findByUserName(userName);
-        if (existing != null){
-        	theModel.addAttribute("webUser", new WebUser());
-			theModel.addAttribute("registrationError", "User name already exists.");
-
-			logger.warning("User name already exists.");
-        	return "register/registration-form";
+        // form validation
+        if (theBindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body("Invalid form data");
         }
-        
-        // create user account and store in the databse
+
+        // check the database if user already exists
+        User existing = userService.findByUserName(userName);
+        if (existing != null) {
+            logger.warning("User name already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User name already exists.");
+        }
+
+        // create user account and store in the database
         userService.save(theWebUser);
-        
+
         logger.info("Successfully created user: " + userName);
 
-		// place user in the web http session for later use
-		session.setAttribute("user", theWebUser);
+        // place user in the web http session for later use
+        session.setAttribute("user", theWebUser);
 
-        return "register/registration-confirmation";
-	}
+        return ResponseEntity.ok("Registration successful");
+    }
 }

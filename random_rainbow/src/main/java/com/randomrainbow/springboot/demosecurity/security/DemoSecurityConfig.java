@@ -31,20 +31,22 @@ public class DemoSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http,
             AuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
 
-        http.authorizeHttpRequests(configurer -> configurer
+        http
+            .authorizeHttpRequests(configurer -> configurer
                 .requestMatchers("/").hasRole("EMPLOYEE")
                 .requestMatchers("/leaders/**").hasRole("MANAGER")
                 .requestMatchers("/systems/**").hasRole("ADMIN")
                 .requestMatchers("/videos/**").permitAll()
-                .requestMatchers("/register/**").permitAll()
+                .requestMatchers("/api/register/**").permitAll()  // Allow registration API endpoints
                 .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/showMyLoginPage")
-                        .loginProcessingUrl("/authenticateTheUser")
-                        .successHandler(customAuthenticationSuccessHandler)
-                        .permitAll())
-                .logout(logout -> logout.permitAll())
-                .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"));
+            .formLogin(form -> form
+                .loginPage("/showMyLoginPage")
+                .loginProcessingUrl("/authenticateTheUser")
+                .successHandler(customAuthenticationSuccessHandler)
+                .permitAll())
+            .logout(logout -> logout.permitAll())
+            .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
+            .csrf().disable();  // Disable CSRF protection for simplicity (adjust as needed for production)
 
         return http.build();
     }
