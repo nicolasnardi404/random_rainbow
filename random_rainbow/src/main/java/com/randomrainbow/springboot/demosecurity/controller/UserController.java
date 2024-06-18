@@ -2,7 +2,6 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import java.util.List;
 
-import com.randomrainbow.springboot.demosecurity.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.service.VideoService;
 
