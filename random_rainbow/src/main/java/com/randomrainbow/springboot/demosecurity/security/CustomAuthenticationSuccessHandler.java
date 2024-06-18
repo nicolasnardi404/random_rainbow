@@ -1,6 +1,7 @@
 package com.randomrainbow.springboot.demosecurity.security;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         System.out.println("userName=" + userName);
 
-        User theUser = userService.findByUserName(userName);
+        Optional<User> theUser = userService.findByUserName(userName);
 
         // now place in the session
         HttpSession session = request.getSession();

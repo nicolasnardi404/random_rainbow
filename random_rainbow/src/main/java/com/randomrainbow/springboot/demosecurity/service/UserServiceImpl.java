@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByUserName(String userName) {
+	public Optional<User> findByUserName(String userName) {
 		// check the database if the user already exists
 		return userDao.findByUserName(userName);
 	}
@@ -59,7 +60,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userDao.findByUserName(userName);
+		User user = userDao.findByUserName(userName)
+               .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userName));
 
 		if (user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");

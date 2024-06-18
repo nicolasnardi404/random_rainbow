@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.controller;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
@@ -50,8 +51,9 @@ public class RegistrationController {
         }
 
         // check the database if user already exists
-        User existing = userService.findByUserName(userName);
-        if (existing != null) {
+        Optional<User> existing = userService.findByUserName(userName);
+
+        if (existing.isPresent()) {
             logger.warning("User name already exists.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User name already exists.");
         }

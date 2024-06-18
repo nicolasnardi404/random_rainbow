@@ -1,10 +1,12 @@
-package com.randomrainbow.springboot.demosecurity.dao;
+ package com.randomrainbow.springboot.demosecurity.dao;
+
+import java.util.Optional;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 
 public interface UserDao {
 
-    User findByUserName(String userName);
+    Optional<User> findByUserName(String userName);
 
     void save(User theUser);
 

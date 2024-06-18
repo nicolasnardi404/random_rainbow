@@ -33,12 +33,13 @@ public class DemoSecurityConfig {
 
         http
             .authorizeHttpRequests(configurer -> configurer
-                .requestMatchers("/").hasRole("EMPLOYEE")
-                .requestMatchers("/leaders/**").hasRole("MANAGER")
-                .requestMatchers("/systems/**").hasRole("ADMIN")
+                // .requestMatchers("/").hasRole("EMPLOYEE")
+                // .requestMatchers("/leaders/**").hasRole("MANAGER")
+                // .requestMatchers("/systems/**").hasRole("ADMIN")
                 .requestMatchers("/videos/**").permitAll()
                 .requestMatchers("/api/register/**").permitAll()  // Allow registration API endpoints
-                .anyRequest().authenticated())
+                // .anyRequest().authenticated())
+                .anyRequest().permitAll())
             .formLogin(form -> form
                 .loginPage("/showMyLoginPage")
                 .loginProcessingUrl("/authenticateTheUser")
