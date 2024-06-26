@@ -25,7 +25,7 @@ public class LoginController {
 
     @PostMapping("/api/authenticate")
     public ResponseEntity<String> authenticateUser(@RequestBody User user) {
-        Optional<User> foundUser = userService.findByUserName(user.getUserName());
+        Optional<User> foundUser = userService.findByUserName(user.getUsername());
 
         if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
             System.out.println("hey");

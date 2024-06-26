@@ -6,15 +6,11 @@ import com.randomrainbow.springboot.demosecurity.dao.UserDao;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.user.WebUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -44,7 +40,7 @@ public class UserServiceImpl implements UserService {
 		User user = new User();
 
 		// assign user details to the user object
-		user.setUserName(webUser.getUserName());
+		user.setUsername(webUser.getUserName());
 		user.setPassword(passwordEncoder.encode(webUser.getPassword()));
 		user.setFirstName(webUser.getFirstName());
 		user.setLastName(webUser.getLastName());
@@ -52,7 +48,7 @@ public class UserServiceImpl implements UserService {
 		user.setEnabled(true);
 
 		// give user default role of "employee"
-		user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_EMPLOYEE")));
+		user.setRole(Role.USER);
 
 		// save user in the database
 		userDao.save(user);
@@ -67,21 +63,15 @@ public class UserServiceImpl implements UserService {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
 
-		Collection<SimpleGrantedAuthority> authorities = mapRolesToAuthorities(user.getRoles());
+		User logIn = new User();
+		logIn.setEmail(user.getEmail());
+		logIn.setUsername(user.getUsername());
+		logIn.setFirstName(user.getFirstName());
+		logIn.setLastName(user.getLastName());
+		logIn.setRole(user.getRole());
 
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
-				authorities);
+		return logIn;
 	}
 
-	private Collection<SimpleGrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-		for (Role tempRole : roles) {
-			SimpleGrantedAuthority tempAuthority = new SimpleGrantedAuthority(tempRole.getName());
-			authorities.add(tempAuthority);
-		}
-
-		return authorities;
-	}
 
 }

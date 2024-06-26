@@ -1,25 +1,39 @@
 package com.randomrainbow.springboot.demosecurity.service;
 
+import com.randomrainbow.springboot.demosecurity.dao.VideoDAO;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-/*
-* The service implementation is important for make the bridge
-* between data sources
-* you can make a solicitation to the service
-* and it will connect with multiple databases
-* instead of making one solicitation to each database
-*/
 
-public interface VideoService {
-    List<Video> findAll();
+@Service
+public class VideoService {
+    public VideoDAO videoDAO;
 
-    Video findById(int id);
+    @Autowired
+    public VideoService(VideoDAO videoDAO) {
+        this.videoDAO = videoDAO;
+    }
 
-    Video save(Video video);
+    public List<Video> findAll() {
+        return videoDAO.findAll();
+    }
 
-    void deleteById(int id);
+    public Video findById(int id) {
+        return videoDAO.findById(id);
+    }
 
-    List<Video> findVideosByUser(User idUser);
+    public Video save(Video video) {
+        return videoDAO.save(video);
+    }
+
+    public void deleteById(int id) {
+        videoDAO.deleteById(id);
+    }
+
+    public List<Video> findVideosByUser(User idUser) {
+        return videoDAO.findVideosByUser(idUser);
+    }
 }
