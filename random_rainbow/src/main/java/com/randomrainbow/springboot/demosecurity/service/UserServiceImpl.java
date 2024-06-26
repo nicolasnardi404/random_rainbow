@@ -2,8 +2,8 @@ package com.randomrainbow.springboot.demosecurity.service;
 
 import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.dao.RoleDao;
-import com.randomrainbow.springboot.demosecurity.dao.UserDao;
 import com.randomrainbow.springboot.demosecurity.entity.User;
+import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.user.WebUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,24 +16,26 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-	private UserDao userDao;
 
 	private RoleDao roleDao;
 
 	private BCryptPasswordEncoder passwordEncoder;
 
+	private UserRepository repository;
+
 	@Autowired
-	public UserServiceImpl(UserDao userDao, RoleDao roleDao, BCryptPasswordEncoder passwordEncoder) {
-		this.userDao = userDao;
+	public UserServiceImpl( RoleDao roleDao, BCryptPasswordEncoder passwordEncoder,
+			UserRepository repository) {
 		this.roleDao = roleDao;
 		this.passwordEncoder = passwordEncoder;
+		this.repository = repository;
 	}
 
-	@Override
-	public Optional<User> findByUserName(String userName) {
-		// check the database if the user already exists
-		return userDao.findByUserName(userName);
-	}
+	// @Override
+	// public Optional<User> findByUserName(String userName) {
+	// 	// check the database if the user already exists
+	// 	return userDao.findByUserName(userName);
+	// }
 
 	@Override
 	public void save(WebUser webUser) {
@@ -51,12 +53,12 @@ public class UserServiceImpl implements UserService {
 		user.setRole(Role.USER);
 
 		// save user in the database
-		userDao.save(user);
+		repository.save(user);
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		User user = userDao.findByUserName(userName)
+		User user = repository.findByUsername(userName)
                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userName));
 
 		if (user == null) {

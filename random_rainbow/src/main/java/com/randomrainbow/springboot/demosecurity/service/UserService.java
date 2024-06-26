@@ -5,11 +5,12 @@ import com.randomrainbow.springboot.demosecurity.user.WebUser;
 
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
-	public Optional<User> findByUserName(String userName);
+	UserDetails loadUserByUsername(String userName);
 
 	void save(WebUser webUser);
 

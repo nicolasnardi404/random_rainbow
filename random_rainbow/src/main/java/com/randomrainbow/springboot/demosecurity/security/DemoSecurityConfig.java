@@ -25,21 +25,6 @@ public class DemoSecurityConfig {
     private final JwtAuthentification jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-    // bcrypt bean definition
-    // @Bean
-    // public BCryptPasswordEncoder passwordEncoder() {
-    //     return new BCryptPasswordEncoder();
-    // }
-
-    // // authenticationProvider bean definition
-    // @Bean
-    // public DaoAuthenticationProvider authenticationProvider(UserService userService) {
-    //     DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-    //     auth.setUserDetailsService(userService); // set the custom user details service
-    //     auth.setPasswordEncoder(passwordEncoder()); // set the password encoder - bcrypt
-    //     return auth;
-    // }
-
      @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -58,30 +43,4 @@ public class DemoSecurityConfig {
         
         return http.build();
     }
-
-    // @Bean
-    // public SecurityFilterChain filterChain(HttpSecurity http,
-    //         AuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
-
-    //     http
-    //         .authorizeHttpRequests(configurer -> configurer
-    //             // .requestMatchers("/").hasRole("EMPLOYEE")
-    //             // .requestMatchers("/leaders/**").hasRole("MANAGER")
-    //             // .requestMatchers("/systems/**").hasRole("ADMIN")
-    //             .requestMatchers("/videos/**").permitAll()
-    //             .requestMatchers("/api/register/**").permitAll()  // Allow registration API endpoints
-    //             // .anyRequest().authenticated())
-    //             .anyRequest().permitAll())
-    //         .formLogin(form -> form
-    //             .loginPage("/showMyLoginPage")
-    //             .loginProcessingUrl("/authenticateTheUser")
-    //             .successHandler(customAuthenticationSuccessHandler)
-    //             .permitAll())
-    //         .logout(logout -> logout.permitAll())
-    //         .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
-    //         .csrf().disable();  // Disable CSRF protection for simplicity (adjust as needed for production)
-
-    //     return http.build();
-    // }
-
 }

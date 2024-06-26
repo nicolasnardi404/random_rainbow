@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
+import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.UserService;
 
 @Controller
@@ -20,12 +21,14 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    private UserRepository repository;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping("/api/authenticate")
     public ResponseEntity<String> authenticateUser(@RequestBody User user) {
-        Optional<User> foundUser = userService.findByUserName(user.getUsername());
+        Optional<User> foundUser = repository.findByUsername(user.getUsername());
 
         if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
             System.out.println("hey");
