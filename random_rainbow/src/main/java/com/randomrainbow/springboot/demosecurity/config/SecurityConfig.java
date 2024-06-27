@@ -1,4 +1,4 @@
-package com.randomrainbow.springboot.demosecurity.security;
+package com.randomrainbow.springboot.demosecurity.config;
 
 import com.randomrainbow.springboot.demosecurity.auth.JwtAuthentification;
 import com.randomrainbow.springboot.demosecurity.service.UserService;
@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class DemoSecurityConfig {
+public class SecurityConfig {
 
     private final JwtAuthentification jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
