@@ -2,75 +2,65 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
+import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
+import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
 import com.randomrainbow.springboot.demosecurity.service.VideoService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AllArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Controller
 @RequestMapping("/users/{idUser}/videos")
 public class VideoController {
     private VideoService videoService;
+    private VideoRepository videoRepository;
+    private UserRepository userRepository;
+  
 
-    @Autowired
-    // in this case the @Autowired is not necessary because its only one constructor
-    public VideoController(VideoService videoService) {
-        this.videoService = videoService;
-    }
-
-    @GetMapping("/list")
-    public String listVideos(Model theModel) {
-        List<Video> videos = videoService.findAll();
-        theModel.addAttribute("videos", videos);
-        return "list-videos";
-    }
-
+// STILL NEED TO SET UP TO UPDATE THE DATA, THIS WAY IT JUSTS SENDS U
     @GetMapping("/addNewVideo/{videoId}")
-    public String showUpdateAdd(@PathVariable("idUser") long idUser, @PathVariable("videoId") Optional<Integer> videoId,
-            Model theModel) {
-        Video video = null;
-        video = videoService.findById(videoId.get());
-        System.out.println("Found video with ID: " + videoId.get());
-        theModel.addAttribute("video", video);
-        theModel.addAttribute("idUser", idUser);
-        return "add-form";
+    public ResponseEntity<Video> showUpdateAdd(@PathVariable("idUser") long idUser, @PathVariable("videoId") Optional<Integer> videoId) {
+        if (videoId.isPresent()) {
+            Video video = videoService.findById(videoId.get());
+            System.out.println("Found video with ID: " + videoId.get());
+            return ResponseEntity.ok(video);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
-    @GetMapping("/addNewVideo")
-    public String showFormAdd(@PathVariable("idUser") long idUser, Model theModel) {
-        Video video = new Video();
-        theModel.addAttribute("video", video);
-        theModel.addAttribute("idUser", idUser);
-        return "add-form";
+    @PostMapping("/addNewVideo")
+    public ResponseEntity<Video> showFormAdd(@PathVariable("idUser") long idUser, @RequestBody Video video) {
+        
+        Optional<User> userOptional = userRepository.findById(idUser);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Video newVideo = new Video();
+            newVideo.setUser(user);
+            newVideo.setTitle(video.getTitle());
+            newVideo.setVideoDescription(video.getVideoDescription());
+            newVideo.setVideoLink(video.getVideoLink());
+            newVideo.setApproved(false);
+            newVideo.setChecked(false);
+            
+            return ResponseEntity.ok(videoRepository.save(newVideo));
+            
+        } else
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
     }
 
-    @PostMapping("/save")
-    // @ModelAttribute to solicitate the video class
-    public String saveEmployee(@PathVariable("idUser") User idUser, @ModelAttribute("video") Video video) {
-        video.setUser(idUser);
-        videoService.save(video);
-        return "redirect:/users/{idUser}/videos";
-    }
-
-    @GetMapping("/delete/{videoId}")
-    // @RequestParam because you need to solicitate the data
-    public String delete(@PathVariable("videoId") int theId) {
-        videoService.deleteById(theId);
-        return "redirect:/users/{idUser}/videos";
-    }
-
-    @GetMapping("/updateVideo")
-    public String updateVideo(@RequestParam("userId") long userId, @RequestParam("videoId") int videoId,
-            Model theModel) {
-        // Assuming you have a method to fetch the video based on videoId
-        Video video = videoService.findById(videoId);
-        theModel.addAttribute("video", video);
-        // Redirect to /addNewVideo including the videoId in the URL
-        return "redirect:/users/" + userId + "/videos/addNewVideo/" + videoId;
+    @DeleteMapping("/deleting/{videoId}")
+    public ResponseEntity<String> deleteVideo(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
+        videoService.deleteById(videoId);
+        return ResponseEntity.ok("Video deleted successfully");
     }
 
 }

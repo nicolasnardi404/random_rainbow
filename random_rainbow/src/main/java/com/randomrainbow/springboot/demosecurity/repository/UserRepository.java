@@ -11,6 +11,7 @@ import com.randomrainbow.springboot.demosecurity.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
+    Optional<User> findById(long idUser);
     
     
 }
