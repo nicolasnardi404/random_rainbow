@@ -22,17 +22,35 @@ public class VideoController {
     private VideoService videoService;
     private VideoRepository videoRepository;
     private UserRepository userRepository;
-  
 
-// STILL NEED TO SET UP TO UPDATE THE DATA, THIS WAY IT JUSTS SENDS U
-    @GetMapping("/addNewVideo/{videoId}")
-    public ResponseEntity<Video> showUpdateAdd(@PathVariable("idUser") long idUser, @PathVariable("videoId") Optional<Integer> videoId) {
-        if (videoId.isPresent()) {
-            Video video = videoService.findById(videoId.get());
-            System.out.println("Found video with ID: " + videoId.get());
-            return ResponseEntity.ok(video);
+    @GetMapping("/{videoId}")
+    public ResponseEntity<Video> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
+        Optional<Video> videoOptional = videoRepository.findById(videoId);
+        if (videoOptional.isPresent()) {
+            return ResponseEntity.ok(videoOptional.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+  
+
+    @PutMapping("/update/{videoId}")
+    public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody Video updatedVideo) {
+        try {
+            Optional<Video> optionalVideo = videoRepository.findById(videoId);
+            if (optionalVideo.isPresent()) {
+                Video video = optionalVideo.get();
+                video.setTitle(updatedVideo.getTitle());
+                video.setVideoDescription(updatedVideo.getVideoDescription());
+                video.setVideoLink(updatedVideo.getVideoLink());
+                videoService.save(video);
+                return ResponseEntity.ok(video);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -49,6 +67,7 @@ public class VideoController {
             newVideo.setVideoLink(video.getVideoLink());
             newVideo.setApproved(false);
             newVideo.setChecked(false);
+            System.out.println(newVideo);
             
             return ResponseEntity.ok(videoRepository.save(newVideo));
             
@@ -57,7 +76,7 @@ public class VideoController {
 
     }
 
-    @DeleteMapping("/deleting/{videoId}")
+    @DeleteMapping("/delete/{videoId}")
     public ResponseEntity<String> deleteVideo(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
         videoService.deleteById(videoId);
         return ResponseEntity.ok("Video deleted successfully");

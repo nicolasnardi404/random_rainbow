@@ -31,7 +31,6 @@ public class LoginController {
         Optional<User> foundUser = repository.findByUsername(user.getUsername());
 
         if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-            System.out.println("hey");
             return ResponseEntity.ok("Authentication successful");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
