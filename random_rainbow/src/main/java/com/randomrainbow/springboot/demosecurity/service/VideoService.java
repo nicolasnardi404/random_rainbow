@@ -36,4 +36,8 @@ public class VideoService {
     public List<Video> findVideosByUser(User idUser) {
         return videoDAO.findVideosByUser(idUser);
     }
+
+    public Video getRandomApprovedVideoByDuration(int maxDuration) {
+       return videoDAO.getRandomApprovedVideoByDuration(maxDuration);
+    }
 }

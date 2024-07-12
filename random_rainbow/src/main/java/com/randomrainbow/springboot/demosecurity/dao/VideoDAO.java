@@ -27,4 +27,6 @@ public interface VideoDAO {
 
     List<Video> findVideosByUser(User idUser);
 
+    Video getRandomApprovedVideoByDuration(int maxDurationSeconds);
+
 }

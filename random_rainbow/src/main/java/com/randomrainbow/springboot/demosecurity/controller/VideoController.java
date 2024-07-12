@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @AllArgsConstructor
 @Controller
@@ -23,6 +25,16 @@ public class VideoController {
     private VideoService videoService;
     private VideoRepository videoRepository;
     private UserRepository userRepository;
+
+    @GetMapping("/randomvideo/{maxDuration}")
+    public ResponseEntity<?> getRandomVideo(@PathVariable int maxDuration) {
+        Video randomVideo = videoService.getRandomApprovedVideoByDuration(maxDuration);
+        if (randomVideo == null) {
+            return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
+        }
+        return ResponseEntity.ok(randomVideo);
+    }
+    
 
     @GetMapping("/{videoId}")
     public ResponseEntity<Video> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {

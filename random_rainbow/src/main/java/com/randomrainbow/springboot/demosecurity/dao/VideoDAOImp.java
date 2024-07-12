@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /*
 Spring @Repository annotation is used to indicate that
@@ -66,12 +67,6 @@ class VideoDAOImp implements VideoDAO {
 
     @Override
     public Video findById(int id) {
-        /*
-         * The EntityManager interface in JPA provides methods to manage entities,
-         * including persisting, merging, removing, and querying entities.
-         * It acts as a bridge between your application and the database,
-         * managing the lifecycle of entity instances.
-         */
         Video video = entityManager.find(Video.class, id);
         return video;
     }
@@ -89,4 +84,25 @@ class VideoDAOImp implements VideoDAO {
         Video video = entityManager.find(Video.class, id);
         entityManager.remove(video);
     }
+
+
+    @Override
+    public Video getRandomApprovedVideoByDuration(int maxDurationSeconds) {
+        TypedQuery<Video> query = entityManager.createQuery(
+                "SELECT v FROM Video v WHERE v.approved = true AND v.duration <= :maxDuration",
+                Video.class);
+        query.setParameter("maxDuration", maxDurationSeconds);
+        List<Video> approvedVideos = query.getResultList();
+
+        if (approvedVideos.isEmpty()) {
+            return null; // Or handle this case appropriately
+        }
+
+        Random random = new Random();
+        int randomIndex = random.nextInt(approvedVideos.size());
+        System.out.println(approvedVideos.size());
+        return approvedVideos.get(randomIndex);
+}
+
+
 }
