@@ -21,23 +21,27 @@ public class Video {
     private int duration;
     private boolean checked;
     private boolean approved;
+    private String endpoint;
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
 
     public Video() {
     }
 
     @Override
     public String toString() {
-        return "Video{" +
-                "id=" + id +
-                ", user=" + idUser +
-                ", title='" + title + '\'' +
-                ", videoDescription='" + videoDescription + '\'' +
-                ", videoLink='" + videoLink + '\'' +
-                ", duration=" + duration +
-                ", checked=" + checked +
-                ", approved=" + approved +
-                '}';
+        return "Video [id=" + id + ", idUser=" + idUser + ", title=" + title + ", videoDescription=" + videoDescription
+                + ", videoLink=" + videoLink + ", duration=" + duration + ", checked=" + checked + ", approved="
+                + approved + ", endpoint=" + endpoint + "]";
     }
+
+
 
     public int getId() {
         return id;

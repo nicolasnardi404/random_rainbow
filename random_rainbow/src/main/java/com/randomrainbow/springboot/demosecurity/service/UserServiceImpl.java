@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 		user.setFirstName(webUser.getFirstName());
 		user.setLastName(webUser.getLastName());
 		user.setEmail(webUser.getEmail());
-		user.setEnabled(true);
+		user.setEmailVerified(true); // change to false later on ##TODO
 
 		// give user default role of "employee"
 		user.setRole(Role.USER);

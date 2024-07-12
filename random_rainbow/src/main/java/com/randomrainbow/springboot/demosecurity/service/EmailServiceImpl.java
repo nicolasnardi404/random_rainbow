@@ -4,10 +4,13 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.randomrainbow.springboot.demosecurity.entity.User;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -44,7 +47,14 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
 
-
+    @Override
+     public void sendVerificationEmail(User user, String token) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Verify Your Email Address");
+        message.setText("Click here to verify your email: http://localhost:8080/verify?token=" + token);
+        javaMailSender.send(message);
     }
 }

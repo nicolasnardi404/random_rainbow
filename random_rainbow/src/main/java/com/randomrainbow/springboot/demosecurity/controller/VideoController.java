@@ -5,6 +5,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
 import com.randomrainbow.springboot.demosecurity.service.VideoService;
+import com.randomrainbow.springboot.demosecurity.util.Util;
 
 import lombok.AllArgsConstructor;
 
@@ -67,6 +68,7 @@ public class VideoController {
             newVideo.setVideoLink(video.getVideoLink());
             newVideo.setApproved(false);
             newVideo.setChecked(false);
+            newVideo.setEndpoint(Util.randomString());
             System.out.println(newVideo);
             
             return ResponseEntity.ok(videoRepository.save(newVideo));

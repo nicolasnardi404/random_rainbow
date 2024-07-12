@@ -52,30 +52,19 @@ public class User implements UserDetails{
     private Role role;  
 
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean emailVerified;
 
+    private String verificationToken;
+    
 
-
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isEmailVerified() {
+        return emailVerified;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + username + '\'' +
-                ", enabled=" + enabled +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", roles=" + role +
-                '}';
-    }
 
         @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,6 +84,18 @@ public class User implements UserDetails{
     @Override
     public boolean isCredentialsNonExpired() {
        return true; 
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", verificationToken="
+                + verificationToken + ", enabled=" + emailVerified + "]";
+    }
+
+    @Override
+    public boolean isEnabled() {
+       return emailVerified;
     }
 
 
