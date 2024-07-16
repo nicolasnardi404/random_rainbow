@@ -26,16 +26,6 @@ public class VideoController {
     private VideoRepository videoRepository;
     private UserRepository userRepository;
 
-    @GetMapping("/randomvideo/{maxDuration}")
-    public ResponseEntity<?> getRandomVideo(@PathVariable int maxDuration) {
-        Video randomVideo = videoService.getRandomApprovedVideoByDuration(maxDuration);
-        if (randomVideo == null) {
-            return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
-        }
-        return ResponseEntity.ok(randomVideo);
-    }
-    
-
     @GetMapping("/{videoId}")
     public ResponseEntity<Video> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
         Optional<Video> videoOptional = videoRepository.findById(videoId);
