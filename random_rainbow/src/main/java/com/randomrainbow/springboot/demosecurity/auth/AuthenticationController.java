@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,9 @@ import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.util.*;
 import com.randomrainbow.springboot.demosecurity.auth.*;
+import com.randomrainbow.springboot.demosecurity.auth.resetPassword.PasswordResetResponse;
+import com.randomrainbow.springboot.demosecurity.auth.resetPassword.NewPasswordRequest;
+import com.randomrainbow.springboot.demosecurity.auth.resetPassword.PasswordResetRequest;
 import com.randomrainbow.springboot.demosecurity.user.CreateUser;
 
 import java.util.UUID;
@@ -40,10 +44,8 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         logger.info("Register request received: {}", request);
         
-        // Create a new user
         User user = createUser(request);
-        
-        // Generate a verification token
+  
         String verificationToken = UUID.randomUUID().toString();
         
         // Save the verification token to the user's record
@@ -65,14 +67,34 @@ public class AuthenticationController {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-
-        userRepository.save(user);
-
         return user;
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
+        try {
+            System.out.println(request);
+            PasswordResetResponse response = service.sendEmailToResetPassword(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error processing password reset request");
+        }
+    }
+
+    @PostMapping("/new-password/{token}")
+    public ResponseEntity<?> newPassword(@PathVariable String token, @RequestBody NewPasswordRequest request) {
+        try {
+            System.out.println(request);
+            System.out.println(token);
+            service.updatePassword(token, request.newPassword());
+            return ResponseEntity.ok("Password successfully updated.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error processing new password request");
+        }
     }
 }

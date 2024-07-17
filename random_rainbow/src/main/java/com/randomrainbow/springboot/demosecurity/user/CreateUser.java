@@ -1,6 +1,7 @@
 package com.randomrainbow.springboot.demosecurity.user; // Adjusted package name
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.randomrainbow.springboot.demosecurity.auth.RegisterRequest;
 import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.entity.User;

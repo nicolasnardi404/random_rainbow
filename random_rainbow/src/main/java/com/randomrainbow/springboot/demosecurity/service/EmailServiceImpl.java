@@ -57,4 +57,13 @@ public class EmailServiceImpl implements EmailService {
         message.setText("Click here to verify your email: http://localhost:8080/verify?token=" + token);
         javaMailSender.send(message);
     }
+
+    @Override
+    public void sendPasswordResetEmail(User user, String resetToken) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Verify Your Email Address");
+        message.setText("Click here to verify your email: http://localhost:3000/new-password/" + resetToken);
+        javaMailSender.send(message);
+    }
 }

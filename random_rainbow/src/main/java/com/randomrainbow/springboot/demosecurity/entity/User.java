@@ -98,5 +98,9 @@ public class User implements UserDetails{
        return emailVerified;
     }
 
+    public void setResetToken(String resetToken) {
+        verificationToken = resetToken;
+    }
+
 
 }

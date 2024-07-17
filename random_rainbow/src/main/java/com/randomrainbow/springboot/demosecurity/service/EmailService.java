@@ -9,4 +9,6 @@ public interface EmailService  {
     String sendMail(MultipartFile[] file, String to,String[] cc, String subject, String body);
 
     void sendVerificationEmail(User user, String token);
+
+    void sendPasswordResetEmail(User user, String resetToken);
 }
