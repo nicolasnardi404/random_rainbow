@@ -116,5 +116,20 @@ public Video getVideoByToken(String endpoint) {
     }
 }
 
-
+@Override
+public List<Video> getAllVideos() {
+    TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v", Video.class);
+    List<Video> videos = theQuery.getResultList();
+    return videos;
 }
+
+@Override
+public List<Video> getAllVideosThatNeedsReview() {
+    TypedQuery<Video> theQuery = entityManager.createQuery(
+            "SELECT v FROM Video v WHERE v.approved = false", Video.class);
+    List<Video> videos = theQuery.getResultList();
+    return videos;
+}
+
+
+}   

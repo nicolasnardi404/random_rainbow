@@ -7,6 +7,7 @@ import com.randomrainbow.springboot.demosecurity.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,6 +36,7 @@ public class SecurityConfig {
            .authorizeHttpRequests(authorize -> authorize
                .requestMatchers("/api/v1/auth/**").permitAll() 
                .requestMatchers("/api/v1/demo-controller").permitAll() // Permit all requests to /api/v1/auth/**
+               .requestMatchers("/admin/*").hasRole("ROLE_ADMIN")   
                .anyRequest().permitAll()// Require authentication for all other requests
             )
            .sessionManagement(session -> session

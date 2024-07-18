@@ -44,4 +44,12 @@ public class VideoService {
     public Video getVideoByToken(String token) {
         return videoDAO.getVideoByToken(token);
     }
+
+    public List<Video> getAllVideos (){
+        return videoDAO.getAllVideos();
+    }
+
+    public List<Video> getAllVideosThatNeedsReview(){
+        return videoDAO.getAllVideosThatNeedsReview();
+    }
 }

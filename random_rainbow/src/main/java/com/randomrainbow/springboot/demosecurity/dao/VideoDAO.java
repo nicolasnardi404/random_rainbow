@@ -31,4 +31,8 @@ public interface VideoDAO {
 
     Video getVideoByToken(String token);
 
+    List<Video> getAllVideos();
+
+    List<Video> getAllVideosThatNeedsReview();
+
 }

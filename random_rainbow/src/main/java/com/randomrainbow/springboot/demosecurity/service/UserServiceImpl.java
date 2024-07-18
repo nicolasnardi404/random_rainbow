@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 		user.setEmailVerified(true); // change to false later on ##TODO
 
 		// give user default role of "employee"
-		user.setRole(Role.USER);
+		user.setRole(Role.ROLE_USER);
 
 		// save user in the database
 		repository.save(user);
