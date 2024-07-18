@@ -104,5 +104,17 @@ class VideoDAOImp implements VideoDAO {
         return approvedVideos.get(randomIndex);
 }
 
+@Override
+public Video getVideoByToken(String endpoint) {
+    try {
+        TypedQuery<Video> query = entityManager.createQuery("SELECT v FROM Video v WHERE v.endpoint = :endpoint", Video.class);
+        query.setParameter("endpoint", endpoint);
+        return query.getSingleResult();
+    } catch (Exception e) {
+        System.out.println("video not found");
+        return null;
+    }
+}
+
 
 }

@@ -40,4 +40,8 @@ public class VideoService {
     public Video getRandomApprovedVideoByDuration(int maxDuration) {
        return videoDAO.getRandomApprovedVideoByDuration(maxDuration);
     }
+
+    public Video getVideoByToken(String token) {
+        return videoDAO.getVideoByToken(token);
+    }
 }

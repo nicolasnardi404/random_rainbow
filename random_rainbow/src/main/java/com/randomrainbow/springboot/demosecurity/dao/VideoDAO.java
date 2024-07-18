@@ -29,4 +29,6 @@ public interface VideoDAO {
 
     Video getRandomApprovedVideoByDuration(int maxDurationSeconds);
 
+    Video getVideoByToken(String token);
+
 }

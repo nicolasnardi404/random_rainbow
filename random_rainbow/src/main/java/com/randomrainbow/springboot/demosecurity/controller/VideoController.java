@@ -34,8 +34,7 @@ public class VideoController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-    }
-  
+    }  
 
     @PutMapping("/update/{videoId}")
     public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody Video updatedVideo) {

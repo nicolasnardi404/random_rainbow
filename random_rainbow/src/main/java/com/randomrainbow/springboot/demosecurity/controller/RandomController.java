@@ -25,4 +25,13 @@ public class RandomController {
         }
         return ResponseEntity.ok(randomVideo);
     }
+
+    @GetMapping("/video/{token}")
+    public ResponseEntity<?> getVideoByToken(@PathVariable String token) {
+        Video video = videoService.getVideoByToken(token);
+        if (video == null) {
+            return ResponseEntity.status(404).body("No video found with the specified token.");
+        }
+        return ResponseEntity.ok(video);
+    }
 }
