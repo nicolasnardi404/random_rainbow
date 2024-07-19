@@ -56,7 +56,6 @@ import lombok.AllArgsConstructor;
     @PutMapping("/videos/{videoId}")
     public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody UpdateVideo updatedVideo) {
         try {
-            System.out.println("I AM HERE");
             Optional<Video> optionalVideo = videoRepository.findById(videoId);
             if (optionalVideo.isPresent()) {
                 Video video = optionalVideo.get();

@@ -17,6 +17,8 @@ import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.EmailService;
 import com.randomrainbow.springboot.demosecurity.service.JwtService;
+import com.randomrainbow.springboot.demosecurity.service.Program;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final Program program;
 
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User.builder()
@@ -43,6 +46,7 @@ public class AuthenticationService {
         user.setVerificationToken(verificationToken);
         userRepository.save(user);
         emailService.sendVerificationEmail(user, verificationToken);
+        
 
         String token = jwtService.generateToken(user);
 

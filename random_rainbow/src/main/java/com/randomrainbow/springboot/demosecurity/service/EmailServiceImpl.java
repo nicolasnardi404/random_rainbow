@@ -1,69 +1,89 @@
 package com.randomrainbow.springboot.demosecurity.service;
 
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 
+import sendinblue.ApiClient;
+import sendinblue.Configuration;
+import sendinblue.auth.ApiKeyAuth;
+import sibApi.TransactionalEmailsApi;
+import sibModel.*;
+
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+    @Value("${brevo.api.key}")
+    private String apiKeyBrevo;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+
+    private TransactionalEmailsApi brevoApi;
+
+    public EmailServiceImpl() {
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
+        apiKey.setApiKey("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");
+        brevoApi = new TransactionalEmailsApi();
+    }
 
     @Override
-    public String sendMail(MultipartFile[] file, String to, String[] cc, String subject, String body) {
+    public void sendVerificationEmail(User user, String token) {
         try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            Long templateId = 2L; // Replace with your actual template ID
+            SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
 
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+            // Set the recipient
+            List<SendSmtpEmailTo> toList = List.of(new SendSmtpEmailTo().email(user.getEmail()));
+            sendSmtpEmail.setTo(toList);
 
-            mimeMessageHelper.setFrom(fromEmail);
-            mimeMessageHelper.setTo(to);
-            mimeMessageHelper.setCc(cc);
-            mimeMessageHelper.setSubject(subject);
-            mimeMessageHelper.setText(body);
+            // Set the template ID
+            sendSmtpEmail.setTemplateId(templateId);
 
-            for (int i = 0; i < file.length; i++) {
-                mimeMessageHelper.addAttachment(
-                        file[i].getOriginalFilename(),
-                        new ByteArrayResource(file[i].getBytes()));
-            }
+            // Add template variables
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("verify_link", "http://localhost:8080/verify?token=" + token);
+            sendSmtpEmail.setParams(params);
 
-            javaMailSender.send(mimeMessage);
-
-            return "mail send";
+            // Send the email
+            brevoApi.sendTransacEmail(sendSmtpEmail);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to send verification email", e);
         }
     }
 
     @Override
-     public void sendVerificationEmail(User user, String token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getEmail());
-        message.setSubject("Verify Your Email Address");
-        message.setText("Click here to verify your email: http://localhost:8080/verify?token=" + token);
-        javaMailSender.send(message);
-    }
-
-    @Override
     public void sendPasswordResetEmail(User user, String resetToken) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(user.getEmail());
-        message.setSubject("Verify Your Email Address");
-        message.setText("Click here to verify your email: http://localhost:3000/new-password/" + resetToken);
-        javaMailSender.send(message);
+        try {
+            Long templateId = 3L; // Replace with your actual template ID
+            SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
+
+            // Set the recipient
+            List<SendSmtpEmailTo> toList = List.of(new SendSmtpEmailTo().email(user.getEmail()));
+            sendSmtpEmail.setTo(toList);
+
+            // Set the template ID
+            sendSmtpEmail.setTemplateId(templateId);
+
+            // Add template variables
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("reset_link", "http://localhost:3000/new-password/" + resetToken);
+            sendSmtpEmail.setParams(params);
+
+            // Send the email
+            brevoApi.sendTransacEmail(sendSmtpEmail);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send password reset email", e);
+        }
     }
 }
