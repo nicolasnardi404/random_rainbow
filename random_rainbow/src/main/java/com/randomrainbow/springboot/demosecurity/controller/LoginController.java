@@ -1,58 +1,41 @@
 package com.randomrainbow.springboot.demosecurity.controller;
 
-import java.util.Optional;
-
+import com.randomrainbow.springboot.demosecurity.auth.AuthenticationRequest;
+import com.randomrainbow.springboot.demosecurity.auth.AuthenticationResponse;
+import com.randomrainbow.springboot.demosecurity.auth.AuthenticationService;
+import com.randomrainbow.springboot.demosecurity.entity.User;
+import com.randomrainbow.springboot.demosecurity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.randomrainbow.springboot.demosecurity.entity.User;
-import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
-import com.randomrainbow.springboot.demosecurity.service.UserService;
-
-@Controller
+@RestController
+@RequestMapping("/api")
 public class LoginController {
 
     @Autowired
-    UserService userService;
+    private AuthenticationService authenticationService;
 
-    private UserRepository repository;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @PostMapping("/api/authenticate")
-    public ResponseEntity<String> authenticateUser(@RequestBody User user) {
-        Optional<User> foundUser = repository.findByUsername(user.getUsername());
-
-        if (foundUser.isPresent() && bCryptPasswordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-            return ResponseEntity.ok("Authentication successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
+    // Handle user authentication
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody AuthenticationRequest request) throws Exception {
+        try {
+            AuthenticationResponse response = authenticationService.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            // You might want to handle specific exceptions separately
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(null));
         }
     }
 
-    // add request mapping for /access-denied
- 
+    // Handle access denied
     @GetMapping("/access-denied")
-    public String showAccessDenied() {
-
-        return "access-denied";
+    public ResponseEntity<String> showAccessDenied() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access Denied");
     }
-
 }
-
-
-
-
-
-
-
-
-
-

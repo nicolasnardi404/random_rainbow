@@ -14,7 +14,7 @@ import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 
 @RestController
-@RequestMapping("/verify")
+@RequestMapping("/api/verify")
 public class VerifyEmail {
     @Autowired
     private UserRepository userRepository;

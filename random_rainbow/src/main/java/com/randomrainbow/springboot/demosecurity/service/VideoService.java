@@ -52,4 +52,8 @@ public class VideoService {
     public List<Video> getAllVideosThatNeedsReview(){
         return videoDAO.getAllVideosThatNeedsReview();
     }
+
+    public Long countVideoByUserId(int idUser) {
+        return videoDAO.countVideoByUserId(idUser);
+    }
 }

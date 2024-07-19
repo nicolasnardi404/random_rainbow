@@ -71,7 +71,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
@@ -79,7 +79,7 @@ public class AuthenticationController {
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
         try {
             System.out.println(request);
-            PasswordResetResponse response = service.sendEmailToResetPassword(request);
+            AuthenticationResponse response = service.sendEmailToResetPassword(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing password reset request");

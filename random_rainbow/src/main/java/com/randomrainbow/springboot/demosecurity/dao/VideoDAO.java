@@ -35,4 +35,6 @@ public interface VideoDAO {
 
     List<Video> getAllVideosThatNeedsReview();
 
+    Long countVideoByUserId(int idUser);
+
 }

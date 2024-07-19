@@ -2,7 +2,10 @@ package com.randomrainbow.springboot.demosecurity.dao;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
+import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
+
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -27,6 +30,8 @@ class VideoDAOImp implements VideoDAO {
     @Autowired
     // the EntityManager is the primary interface for managing entities in JPA
     private EntityManager entityManager;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<Video> findAll() {
@@ -102,34 +107,42 @@ class VideoDAOImp implements VideoDAO {
         int randomIndex = random.nextInt(approvedVideos.size());
         System.out.println(approvedVideos.size());
         return approvedVideos.get(randomIndex);
-}
-
-@Override
-public Video getVideoByToken(String endpoint) {
-    try {
-        TypedQuery<Video> query = entityManager.createQuery("SELECT v FROM Video v WHERE v.endpoint = :endpoint", Video.class);
-        query.setParameter("endpoint", endpoint);
-        return query.getSingleResult();
-    } catch (Exception e) {
-        System.out.println("video not found");
-        return null;
     }
-}
 
-@Override
-public List<Video> getAllVideos() {
-    TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v", Video.class);
-    List<Video> videos = theQuery.getResultList();
-    return videos;
-}
+    @Override
+    public Video getVideoByToken(String endpoint) {
+        try {
+            TypedQuery<Video> query = entityManager.createQuery("SELECT v FROM Video v WHERE v.endpoint = :endpoint", Video.class);
+            query.setParameter("endpoint", endpoint);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            System.out.println("video not found");
+            return null;
+        }
+    }
 
-@Override
-public List<Video> getAllVideosThatNeedsReview() {
-    TypedQuery<Video> theQuery = entityManager.createQuery(
-            "SELECT v FROM Video v WHERE v.approved = false", Video.class);
-    List<Video> videos = theQuery.getResultList();
-    return videos;
-}
+    @Override
+    public List<Video> getAllVideos() {
+        TypedQuery<Video> theQuery = entityManager.createQuery("SELECT v FROM Video v", Video.class);
+        List<Video> videos = theQuery.getResultList();
+        return videos;
+    }
 
+    @Override
+    public List<Video> getAllVideosThatNeedsReview() {
+        TypedQuery<Video> theQuery = entityManager.createQuery(
+                "SELECT v FROM Video v WHERE v.approved = false", Video.class);
+        List<Video> videos = theQuery.getResultList();
+        return videos;
+    }
+
+   public Long countVideoByUserId(int idUser) {
+        User user = userRepository.findById(idUser).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        System.out.println(user.getId());
+        TypedQuery<Long> query = entityManager.createQuery(
+            "SELECT COUNT(*) FROM Video v WHERE v.idUser = :user", Long.class);
+        query.setParameter("user", user);
+        return query.getSingleResult();
+    }
 
 }   

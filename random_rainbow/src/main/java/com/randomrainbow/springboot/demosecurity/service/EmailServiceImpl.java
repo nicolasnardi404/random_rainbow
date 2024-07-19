@@ -49,7 +49,7 @@ public class EmailServiceImpl implements EmailService {
             // Add template variables
             Map<String, Object> params = new HashMap<>();
             params.put("username", user.getUsername());
-            params.put("verify_link", "http://localhost:8080/verify?token=" + token);
+            params.put("verify_link", "http://localhost:8080/api/verify?token=" + token);
             sendSmtpEmail.setParams(params);
 
             // Send the email

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ import java.util.Random;
 
 @AllArgsConstructor
 @Controller
-@RequestMapping("/users/{idUser}/videos")
+@RequestMapping("/api/users/{idUser}/videos")
 public class VideoController {
     private VideoService videoService;
     private VideoRepository videoRepository;
@@ -57,11 +58,16 @@ public class VideoController {
     }
 
     @PostMapping("/addNewVideo")
-    public ResponseEntity<Video> showFormAdd(@PathVariable("idUser") long idUser, @RequestBody Video video) {
+    public ResponseEntity<Video> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
         
         Optional<User> userOptional = userRepository.findById(idUser);
         if (userOptional.isPresent()){
             User user = userOptional.get();
+            Long existingVideosCount = videoService.countVideoByUserId(idUser);
+            if (existingVideosCount >= 3) {
+                return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
+            }
+
             Video newVideo = new Video();
             newVideo.setUser(user);
             newVideo.setTitle(video.getTitle());
@@ -70,7 +76,6 @@ public class VideoController {
             newVideo.setApproved(false);
             newVideo.setChecked(false);
             newVideo.setEndpoint(Util.randomString());
-            System.out.println(newVideo);
             
             return ResponseEntity.ok(videoRepository.save(newVideo));
             
