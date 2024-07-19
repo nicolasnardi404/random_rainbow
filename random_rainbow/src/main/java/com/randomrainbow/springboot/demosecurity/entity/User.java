@@ -28,7 +28,7 @@ public class User implements UserDetails{
     @Column(name="id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     @NotNull(message = "is required")
     private String username;
 
@@ -43,7 +43,7 @@ public class User implements UserDetails{
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     @NotNull(message = "is required")
 	@Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;

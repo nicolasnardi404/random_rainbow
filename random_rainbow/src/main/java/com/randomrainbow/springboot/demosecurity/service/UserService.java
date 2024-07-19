@@ -12,6 +12,5 @@ public interface UserService extends UserDetailsService {
 
 	UserDetails loadUserByUsername(String userName);
 
-	void save(WebUser webUser);
-
+	User registerNewUser(User user) throws Exception;
 }

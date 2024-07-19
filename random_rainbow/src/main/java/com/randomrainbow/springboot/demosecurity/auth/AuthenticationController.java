@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.auth;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.EmailService;
+import com.randomrainbow.springboot.demosecurity.service.UserService;
 
 import ch.qos.logback.classic.pattern.Util;
 
@@ -39,23 +41,22 @@ public class AuthenticationController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
-        logger.info("Register request received: {}", request);
-        
-        User user = createUser(request);
-  
-        String verificationToken = UUID.randomUUID().toString();
-        
-        // Save the verification token to the user's record
-        user.setVerificationToken(verificationToken);
-        userRepository.save(user);
-        
-        // Send a verification email
-        emailService.sendVerificationEmail(user, verificationToken);
-        
-        return ResponseEntity.ok(new AuthenticationResponse("Registration successful. Please verify your email."));
+        try {
+            User user = createUser(request);
+            String verificationToken = UUID.randomUUID().toString();
+            user.setVerificationToken(verificationToken);
+            userService.registerNewUser(user);
+            emailService.sendVerificationEmail(user, verificationToken);
+            return ResponseEntity.ok(AuthenticationResponse.builder().token(verificationToken).build());
+        } catch (CustomException e) {
+            return ResponseEntity.badRequest().body(AuthenticationResponse.builder().errorMessage(e.getMessage()).build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(AuthenticationResponse.builder().errorMessage("An unexpected error occurred").build());
+        }
     }
 
     private User createUser(RegisterRequest request) {

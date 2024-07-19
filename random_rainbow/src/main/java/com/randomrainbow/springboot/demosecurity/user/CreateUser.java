@@ -6,6 +6,7 @@ import com.randomrainbow.springboot.demosecurity.auth.RegisterRequest;
 import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
+import com.randomrainbow.springboot.demosecurity.service.UserService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service; // Annotate the class to enable dependency injection
@@ -16,8 +17,9 @@ public class CreateUser {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserService userService;
 
-    public User createUser(RegisterRequest request) {
+    public User createUser(RegisterRequest request) throws Exception {
 
         User user = User.builder()
                 .username(request.getUsername())
@@ -28,7 +30,7 @@ public class CreateUser {
                 .role(Role.ROLE_USER)
                 .build();
 
-        userRepository.save(user);
+        userService.registerNewUser(user);
 
         return user;
     }
