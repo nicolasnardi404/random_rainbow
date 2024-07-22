@@ -34,7 +34,7 @@ public class SecurityConfig {
         http
            .csrf(csrf -> csrf.disable()) // Disable CSRF protection
            .authorizeHttpRequests(authorize -> authorize
-               .requestMatchers("/api/*").hasAnyRole("ADMIN","USER") // Permit all requests to /api/v1/auth/**
+            //    .requestMatchers("/api/*").hasAnyRole("ADMIN","USER") // Permit all requests to /api/v1/auth/**
                .requestMatchers("/admin/*").hasRole("ADMIN")   
                .requestMatchers("/api/randomvideo/*").permitAll()
                .requestMatchers("/api/verify").permitAll()

@@ -50,6 +50,7 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        System.out.println(user);
 
         if (!user.isEmailVerified()) {
             throw new Exception("Please verify your email address.");

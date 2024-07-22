@@ -73,6 +73,7 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
+        System.out.println(service.authenticate(request));
         return ResponseEntity.ok(service.authenticate(request));
     }
 
