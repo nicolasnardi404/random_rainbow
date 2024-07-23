@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 		logIn.setRole(user.getRole());
 
 		return logIn;
-	}
+	}	
 
 
 	@Override

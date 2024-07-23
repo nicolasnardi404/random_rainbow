@@ -1,6 +1,9 @@
 package com.randomrainbow.springboot.demosecurity.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 // if the id will be initialized at the data base how do i define the contructor
 @Entity
 @Table(name = "videos", schema = "random_rainbow")
@@ -9,19 +12,88 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
+
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User idUser;
+
     @Column(name = "title")
+    @NotNull(message = "Title is required")
     private String title;
+
     @Column(name = "video_description")
+    @NotNull(message = "Video Description is required")
     private String videoDescription;
+
     @Column(name = "video_link")
+    @NotNull(message = "Video Link is required")
     private String videoLink;
+
     private int duration;
-    private boolean checked;
-    private boolean approved;
+
+    private boolean active;
+
+    @Column(name = "video_status")
+    private VideoStatus videoStatus;
+
     private String endpoint;
+
+    @Column(name = "submission_date")
+    private Date submissionDate;
+
+    @Column(name = "approved_date")
+    private Date approvedDate;
+
+  
+
+    @Override
+    public String toString() {
+        return "Video [id=" + id + ", idUser=" + idUser + ", title=" + title + ", videoDescription=" + videoDescription
+                + ", videoLink=" + videoLink + ", duration=" + duration + ", active=" + active + ", videoStatus="
+                + videoStatus + ", endpoint=" + endpoint + ", SubmissionDate=" + submissionDate + ", ApprovedDate="
+                + approvedDate + "]";
+    }
+
+
+    public User getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(User idUser) {
+        this.idUser = idUser;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public VideoStatus getVideoStatus() {
+        return videoStatus;
+    }
+
+    public void setVideoStatus(VideoStatus videoStatus) {
+        this.videoStatus = videoStatus;
+    }
+
+    public Date getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(Date submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
+
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
+    }
 
     public String getEndpoint() {
         return endpoint;
@@ -33,14 +105,6 @@ public class Video {
 
     public Video() {
     }
-
-    @Override
-    public String toString() {
-        return "Video [id=" + id + ", idUser=" + idUser + ", title=" + title + ", videoDescription=" + videoDescription
-                + ", videoLink=" + videoLink + ", duration=" + duration + ", checked=" + checked + ", approved="
-                + approved + ", endpoint=" + endpoint + "]";
-    }
-
 
 
     public int getId() {
@@ -89,21 +153,5 @@ public class Video {
 
     public void setDuration(int duration) {
         this.duration = duration;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 }

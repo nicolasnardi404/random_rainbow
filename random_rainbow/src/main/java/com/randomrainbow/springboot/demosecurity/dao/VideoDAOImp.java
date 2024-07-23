@@ -94,7 +94,7 @@ class VideoDAOImp implements VideoDAO {
     @Override
     public Video getRandomApprovedVideoByDuration(int maxDurationSeconds) {
         TypedQuery<Video> query = entityManager.createQuery(
-                "SELECT v FROM Video v WHERE v.approved = true AND v.duration <= :maxDuration",
+                "SELECT v FROM Video v WHERE v.videoStatus = AVAILABLE AND v.duration <= :maxDuration",
                 Video.class);
         query.setParameter("maxDuration", maxDurationSeconds);
         List<Video> approvedVideos = query.getResultList();
@@ -131,7 +131,7 @@ class VideoDAOImp implements VideoDAO {
     @Override
     public List<Video> getAllVideosThatNeedsReview() {
         TypedQuery<Video> theQuery = entityManager.createQuery(
-                "SELECT v FROM Video v WHERE v.approved = false", Video.class);
+                "SELECT v FROM Video v WHERE v.videoStatus = AVAILABLE", Video.class);
         List<Video> videos = theQuery.getResultList();
         return videos;
     }

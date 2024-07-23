@@ -1,5 +1,8 @@
 package com.randomrainbow.springboot.demosecurity.user; // Adjusted package name
 
+
+import java.util.Date;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.randomrainbow.springboot.demosecurity.auth.RegisterRequest;
@@ -28,6 +31,7 @@ public class CreateUser {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
+                .admissionDate(new Date())
                 .build();
 
         userService.registerNewUser(user);

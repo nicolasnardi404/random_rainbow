@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
+import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
 import com.randomrainbow.springboot.demosecurity.service.VideoService;
@@ -14,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Date;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -43,7 +44,6 @@ public class VideoController {
                 Video video = optionalVideo.get();
                 video.setTitle(updatedVideo.getTitle());
                 video.setVideoDescription(updatedVideo.getVideoDescription());
-                video.setVideoLink(updatedVideo.getVideoLink());
                 videoService.save(video);
                 return ResponseEntity.ok(video);
             } else {
@@ -71,10 +71,12 @@ public class VideoController {
             newVideo.setTitle(video.getTitle());
             newVideo.setVideoDescription(video.getVideoDescription());
             newVideo.setVideoLink(video.getVideoLink());
-            newVideo.setApproved(false);
-            newVideo.setChecked(false);
+            newVideo.setSubmissionDate(new Date());
+            newVideo.setActive(true);
+            newVideo.setVideoStatus(VideoStatus.UNCHECKED);
             newVideo.setEndpoint(Util.randomString());
             
+            System.out.println(newVideo);
             return ResponseEntity.ok(videoRepository.save(newVideo));
             
         } else

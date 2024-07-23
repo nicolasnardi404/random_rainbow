@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -51,11 +52,15 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private Role role;  
 
-    @Column(name = "enabled")
+    @Column(name = "email_verified")
     private boolean emailVerified;
 
+    @Column(name = "verification_token")
     private String verificationToken;
     
+    @Column(name = "admission_date")
+    private Date admissionDate;
+
 
     public boolean isEmailVerified() {
         return emailVerified;
@@ -86,13 +91,7 @@ public class User implements UserDetails{
        return true; 
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", verificationToken="
-                + verificationToken + ", enabled=" + emailVerified + "]";
-    }
-
+    
     @Override
     public boolean isEnabled() {
        return emailVerified;
@@ -100,6 +99,13 @@ public class User implements UserDetails{
 
     public void setResetToken(String resetToken) {
         verificationToken = resetToken;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+                + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified
+                + ", verificationToken=" + verificationToken + ", admissionDate=" + admissionDate + "]";
     }
 
 

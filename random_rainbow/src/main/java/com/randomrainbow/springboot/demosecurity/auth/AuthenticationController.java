@@ -24,6 +24,7 @@ import com.randomrainbow.springboot.demosecurity.auth.resetPassword.NewPasswordR
 import com.randomrainbow.springboot.demosecurity.auth.resetPassword.PasswordResetRequest;
 import com.randomrainbow.springboot.demosecurity.user.CreateUser;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class AuthenticationController {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.ROLE_USER)
+                .admissionDate(new Date())
                 .build();
         return user;
     }

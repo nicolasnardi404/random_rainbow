@@ -1,6 +1,7 @@
     package com.randomrainbow.springboot.demosecurity.controller;
 
 
+    import java.util.Date;
     import java.util.List;
     import java.util.Optional;
 
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
-    import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
+import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
+import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
     import com.randomrainbow.springboot.demosecurity.service.VideoService;
 
 import jakarta.transaction.Transactional;
@@ -89,7 +91,21 @@ import lombok.AllArgsConstructor;
             Optional<Video> videoOptional = videoRepository.findById(id);
             if (videoOptional.isPresent()) {
                 Video video = videoOptional.get();
-                video.setApproved(!video.isApproved());
+                video.setVideoStatus(VideoStatus.AVAILABLE);
+                video.setApprovedDate(new Date());
+                videoService.save(video);
+                return ResponseEntity.ok(video);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+
+        @PutMapping("/videos/{id}/toggle-cancel")
+        public ResponseEntity<Video> toggleCancelVideo(@PathVariable int id) {
+            Optional<Video> videoOptional = videoRepository.findById(id);
+            if (videoOptional.isPresent()) {
+                Video video = videoOptional.get();
+                video.setVideoStatus(VideoStatus.DOESNT_RESPECT_GUIDELINES);
                 videoService.save(video);
                 return ResponseEntity.ok(video);
             } else {
