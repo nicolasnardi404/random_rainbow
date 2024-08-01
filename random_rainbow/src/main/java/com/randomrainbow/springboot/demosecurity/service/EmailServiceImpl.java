@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,16 +22,20 @@ import sibModel.*;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${brevo.api.key}")
-    private String apiKeyBrevo;
-
-
+    private final Environment environment;
     private TransactionalEmailsApi brevoApi;
 
-    public EmailServiceImpl() {
+     @Autowired
+    public EmailServiceImpl(Environment environment) {
+        this.environment = environment;
+        initializeBrevoApi();
+    }
+
+
+   private void initializeBrevoApi() {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey(apiKeyBrevo);
+        apiKey.setApiKey(environment.getProperty("BREVO_API_KEY"));
         brevoApi = new TransactionalEmailsApi();
     }
 
