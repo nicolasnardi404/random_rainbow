@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
     public EmailServiceImpl() {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey("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");
+        apiKey.setApiKey(apiKeyBrevo);
         brevoApi = new TransactionalEmailsApi();
     }
 
