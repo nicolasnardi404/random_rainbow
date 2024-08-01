@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <title>luv2code Company Home Page</title>
+</head>
+
+
+<div th:if="${session.user}">
+    <p th:text="'First name: ' + ${session.user.firstName} + ', Last name: ' + ${session.user.lastName} + ', ID: ' + ${session.user.id}"></p>
+    <!-- Redirect to user profile page -->
+    <a th:href="@{/users/{userId}/videos(userId=${session.user.id})}" th:text="'View Videos'"></a>
+</div>
+
+<hr>
+
+<!-- Add a logout button -->
+<form action="#" th:action="@{/logout}"
+      method="POST">
+
+    <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+
+</form>
+
+</body>
+
+</html>
