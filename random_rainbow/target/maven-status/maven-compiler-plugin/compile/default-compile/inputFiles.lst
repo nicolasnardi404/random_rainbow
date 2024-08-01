@@ -24,6 +24,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/RegistrationController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetRequest.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/VideoStatus.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/EmailService.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow_database/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/VideoService.java

@@ -3,22 +3,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      platform: linux/arm64
-    env_file:
-      - .env
     ports:
       - "8080:8080"
     depends_on:
       - db
-  db:
-    image: mysql:5.7
     environment:
-      MYSQL_DATABASE: ${SPRING_DATASOURCE_URL}
-      MYSQL_USER: ${SPRING_DATASOURCE_USERNAME}
-      MYSQL_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:mysql://random_rainbow-db-1:3306/random_rainbow
+      # Include other environment variables needed by your application here
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: random_rainbow
+      MYSQL_ROOT_PASSWORD: localpassword
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: test
     volumes:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
 volumes:
   db_data:

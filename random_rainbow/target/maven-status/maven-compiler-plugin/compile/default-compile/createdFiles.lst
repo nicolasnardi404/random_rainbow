@@ -28,6 +28,7 @@ com/randomrainbow/springboot/demosecurity/repository/UserRepository.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse$AuthenticationResponseBuilder.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse.class
 com/randomrainbow/springboot/demosecurity/service/VideoService.class
+com/randomrainbow/springboot/demosecurity/entity/VideoStatus.class
 com/randomrainbow/springboot/demosecurity/service/JwtService.class
 com/randomrainbow/springboot/demosecurity/controller/DemoController.class
 com/randomrainbow/springboot/demosecurity/dao/VideoDAOImp.class
