@@ -4,7 +4,6 @@ import com.randomrainbow.springboot.demosecurity.entity.Role;
 import com.randomrainbow.springboot.demosecurity.dao.RoleDao;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
-import com.randomrainbow.springboot.demosecurity.user.WebUser;
 import com.randomrainbow.springboot.demosecurity.util.CustomException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,16 +53,6 @@ public class UserServiceImpl implements UserService {
 		return logIn;
 	}	
 
-
-	@Override
-	@Transactional
-	public User registerNewUser(User user) {
-		try {
-			return repository.save(user);
-		} catch (DataIntegrityViolationException e) {
-			throw new CustomException(handleDataIntegrityViolationException(e));
-		}
-	}
 
 	private String handleDataIntegrityViolationException(DataIntegrityViolationException e) {
 		if (e.getMessage().contains("user.username_UNIQUE")) {

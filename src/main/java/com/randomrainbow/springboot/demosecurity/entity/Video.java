@@ -4,6 +4,7 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 // if the id will be initialized at the data base how do i define the contructor
 @Entity
 @Table(name = "videos", schema = "random_rainbow")

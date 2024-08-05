@@ -47,11 +47,18 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         try {
+            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+                throw new CustomException("Username already exists");
+            }
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new CustomException("Email already exists");
+            }
             User user = createUser(request);
             String verificationToken = UUID.randomUUID().toString();
             user.setVerificationToken(verificationToken);
-            userService.registerNewUser(user);
             emailService.sendVerificationEmail(user, verificationToken);
+            userRepository.save(user);
+            System.out.println(user);
             return ResponseEntity.ok(AuthenticationResponse.builder().token(verificationToken).build());
         } catch (CustomException e) {
             return ResponseEntity.badRequest().body(AuthenticationResponse.builder().errorMessage(e.getMessage()).build());
@@ -93,8 +100,6 @@ public class AuthenticationController {
     @PostMapping("/new-password/{token}")
     public ResponseEntity<?> newPassword(@PathVariable String token, @RequestBody NewPasswordRequest request) {
         try {
-            System.out.println(request);
-            System.out.println(token);
             service.updatePassword(token, request.newPassword());
             return ResponseEntity.ok("Password successfully updated.");
         } catch (Exception e) {

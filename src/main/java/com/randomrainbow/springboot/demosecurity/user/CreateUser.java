@@ -34,8 +34,6 @@ public class CreateUser {
                 .admissionDate(new Date())
                 .build();
 
-        userService.registerNewUser(user);
-
         return user;
     }
 }

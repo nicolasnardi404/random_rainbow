@@ -15,7 +15,8 @@
     import org.springframework.web.bind.annotation.RequestBody;
     import org.springframework.web.bind.annotation.RequestMapping;
     import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
-    import com.randomrainbow.springboot.demosecurity.entity.Video;
+import com.randomrainbow.springboot.demosecurity.dto.VideoDuration;
+import com.randomrainbow.springboot.demosecurity.entity.Video;
     import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
     import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
     import com.randomrainbow.springboot.demosecurity.service.VideoService;
@@ -52,25 +53,25 @@
             }
         }
 
-    @PutMapping("/videos/{videoId}")
-    public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody UpdateVideo updatedVideo) {
-        try {
-            Optional<Video> optionalVideo = videoRepository.findById(videoId);
-            if (optionalVideo.isPresent()) {
-                Video video = optionalVideo.get();
-                video.setTitle(updatedVideo.title());
-                video.setVideoDescription(updatedVideo.videoDescription());
-                video.setVideoLink(updatedVideo.videoLink());
-                videoService.save(video);
-                return ResponseEntity.ok(video);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        @PutMapping("/videos/{videoId}")
+        public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody UpdateVideo updatedVideo) {
+            try {
+                Optional<Video> optionalVideo = videoRepository.findById(videoId);
+                if (optionalVideo.isPresent()) {
+                    Video video = optionalVideo.get();
+                    video.setTitle(updatedVideo.title());
+                    video.setVideoDescription(updatedVideo.videoDescription());
+                    video.setVideoLink(updatedVideo.videoLink());
+                    videoService.save(video);
+                    return ResponseEntity.ok(video);
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-    }
 
         @DeleteMapping("/videos/{id}")
         public ResponseEntity<Void> deleteVideo(@PathVariable int id) {
@@ -103,6 +104,19 @@
             if (videoOptional.isPresent()) {
                 Video video = videoOptional.get();
                 video.setVideoStatus(VideoStatus.DOESNT_RESPECT_GUIDELINES);
+                videoService.save(video);
+                return ResponseEntity.ok(video);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+
+        @PutMapping("/videos/duration/{id}")
+        public ResponseEntity<Video> setVideoDuration(@PathVariable int id, @RequestBody VideoDuration videoDuration) {
+            Optional<Video> videoOptional = videoRepository.findById(id);
+            if (videoOptional.isPresent()) {
+                Video video = videoOptional.get();
+                video.setDuration(videoDuration.duration());
                 videoService.save(video);
                 return ResponseEntity.ok(video);
             } else {
