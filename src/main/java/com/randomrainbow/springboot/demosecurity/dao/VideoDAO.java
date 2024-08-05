@@ -15,6 +15,8 @@ import java.util.List;
 * */
 public interface VideoDAO {
 
+    List<Video> getAllVideosApprovedByArtist (long UserId);
+
     List<Video> findAll();
 
     List<Video> findVideosByUserId(int userId);

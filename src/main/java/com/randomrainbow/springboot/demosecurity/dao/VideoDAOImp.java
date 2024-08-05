@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.dao;
 
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
+import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 
 import jakarta.persistence.EntityManager;
@@ -143,6 +144,15 @@ class VideoDAOImp implements VideoDAO {
             "SELECT COUNT(*) FROM Video v WHERE v.idUser = :user", Long.class);
         query.setParameter("user", user);
         return query.getSingleResult();
+    }
+
+    @Override
+    public List<Video> getAllVideosApprovedByArtist(long idUser) {
+        User user = userRepository.findById(idUser).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        TypedQuery<Video> query = entityManager.createQuery(
+            "SELECT v FROM Video v WHERE v.idUser = :userId AND v.videoStatus = AVAILABLE", Video.class);
+        query.setParameter("userId", user);
+        return query.getResultList();
     }
 
 }   

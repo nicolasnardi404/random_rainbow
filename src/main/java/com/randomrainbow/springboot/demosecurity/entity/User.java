@@ -44,6 +44,12 @@ public class User implements UserDetails{
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "social_media")
+    private String socialMedia;
+
+    @Column(name = "artist_description")
+    private String artistDescription;
+
     @Column(name = "email", unique = true, nullable = false)
     @NotNull(message = "is required")
 	@Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
@@ -104,9 +110,11 @@ public class User implements UserDetails{
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified
-                + ", verificationToken=" + verificationToken + ", admissionDate=" + admissionDate + "]";
+                + ", lastName=" + lastName + ", socialMedia=" + socialMedia + ", artistDescription=" + artistDescription
+                + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified + ", verificationToken="
+                + verificationToken + ", admissionDate=" + admissionDate + "]";
     }
 
+  
 
 }

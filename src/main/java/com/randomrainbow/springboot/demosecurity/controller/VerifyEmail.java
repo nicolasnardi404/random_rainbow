@@ -24,7 +24,7 @@ public class VerifyEmail {
         Optional<User> userOptional = userRepository.findByVerificationToken(token);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setEmailVerified(true); // Mark the email as verified
+            user.setEmailVerified(true); 
             userRepository.save(user);
             return ResponseEntity.ok("Email verified successfully.");
         } else {

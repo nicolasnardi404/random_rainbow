@@ -57,8 +57,8 @@ public class VideoController {
 
     @PostMapping("/addNewVideo")
     public ResponseEntity<Video> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
-        
         Optional<User> userOptional = userRepository.findById(idUser);
+
         if (userOptional.isPresent()){
             User user = userOptional.get();
             Long existingVideosCount = videoService.countVideoByUserId(idUser);

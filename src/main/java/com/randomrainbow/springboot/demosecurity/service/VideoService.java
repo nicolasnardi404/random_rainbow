@@ -41,6 +41,10 @@ public class VideoService {
        return videoDAO.getRandomApprovedVideoByDuration(maxDuration);
     }
 
+    public List<Video> getAllVideosApprovedByArtist (long userId){
+        return videoDAO.getAllVideosApprovedByArtist(userId);
+    }
+
     public Video getVideoByToken(String token) {
         return videoDAO.getVideoByToken(token);
     }
