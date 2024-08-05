@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 // if the id will be initialized at the data base how do i define the contructor
 @Entity
-@Table(name = "videos", schema = "random_rainbow")
+@Table(name = "videos")
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

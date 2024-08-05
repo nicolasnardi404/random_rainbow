@@ -4,10 +4,12 @@ com/randomrainbow/springboot/demosecurity/entity/Role.class
 com/randomrainbow/springboot/demosecurity/entity/User.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest.class
 com/randomrainbow/springboot/demosecurity/service/SendinblueConfig.class
+com/randomrainbow/springboot/demosecurity/dto/DataUserProfile.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest.class
 com/randomrainbow/springboot/demosecurity/controller/LoginController.class
 com/randomrainbow/springboot/demosecurity/dto/UpdateVideo.class
 com/randomrainbow/springboot/demosecurity/util/CustomException.class
+com/randomrainbow/springboot/demosecurity/dto/VideoDuration.class
 com/randomrainbow/springboot/demosecurity/dao/VideoDAO.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationService.class
 com/randomrainbow/springboot/demosecurity/config/Webconfig.class
@@ -21,7 +23,6 @@ com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetRespon
 com/randomrainbow/springboot/demosecurity/controller/UserController.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationController.class
 com/randomrainbow/springboot/demosecurity/repository/VideoRepository.class
-com/randomrainbow/springboot/demosecurity/user/WebUser.class
 com/randomrainbow/springboot/demosecurity/util/Util.class
 com/randomrainbow/springboot/demosecurity/auth/resetPassword/NewPasswordRequest.class
 com/randomrainbow/springboot/demosecurity/repository/UserRepository.class
@@ -29,6 +30,7 @@ com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse$Authentica
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse.class
 com/randomrainbow/springboot/demosecurity/service/VideoService.class
 com/randomrainbow/springboot/demosecurity/entity/VideoStatus.class
+com/randomrainbow/springboot/demosecurity/dto/UserProfileView.class
 com/randomrainbow/springboot/demosecurity/service/JwtService.class
 com/randomrainbow/springboot/demosecurity/controller/DemoController.class
 com/randomrainbow/springboot/demosecurity/dao/VideoDAOImp.class
