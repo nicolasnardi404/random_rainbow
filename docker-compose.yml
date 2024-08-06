@@ -7,12 +7,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - db
     environment:
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: ${POSTGRES_URL}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
       SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
       SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
@@ -20,26 +18,48 @@ services:
       SPRING_MAIL_STARTTLS_ENABLE: ${SPRING_MAIL_STARTTLS_ENABLE}
       SPRING_MAIL_AUTH: ${SPRING_MAIL_AUTH}
       BREVO_API_KEY: ${BREVO_API_KEY}
-    networks:
-      - app-network
+# version: "3.8"
 
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - db_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - app-network
+# services:
+#   app:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8080:8080"
+#     depends_on:
+#       - db
+#     environment:
+#       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+#       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+#       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+#       SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
+#       SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+#       SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+#       SPRING_MAIL_PORT: ${SPRING_MAIL_PORT}
+#       SPRING_MAIL_STARTTLS_ENABLE: ${SPRING_MAIL_STARTTLS_ENABLE}
+#       SPRING_MAIL_AUTH: ${SPRING_MAIL_AUTH}
+#       BREVO_API_KEY: ${BREVO_API_KEY}
+#     networks:
+#       - app-network
 
-networks:
-  app-network:
-    driver: bridge
+# db:
+#   image: mysql:8.0
+#   environment:
+#     MYSQL_DATABASE: ${MYSQL_DATABASE}
+#     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#     MYSQL_USER: ${MYSQL_USER}
+#     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#   volumes:
+#     - db_data:/var/lib/mysql
+#   ports:
+#     - "3306:3306"
+#   networks:
+#     - app-network
 
-volumes:
-  db_data:
+# networks:
+#   app-network:
+#     driver: bridge
+
+# volumes:
+#   db_data:

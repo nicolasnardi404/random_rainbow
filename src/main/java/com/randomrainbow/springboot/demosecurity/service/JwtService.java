@@ -20,8 +20,6 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "c1c7767ffcb18a3e17177b1a49434fd6a74e8bfb8cbec4fa64231ab64c647f6b";
-
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -70,7 +68,11 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        String secretKeyString = System.getenv("JWT_SECRET_KEY");
+        if (secretKeyString == null || secretKeyString.isEmpty()) {
+            throw new IllegalStateException("Expected JWT_SECRET_KEY to be set");
+        }
+        byte[] keyBytes = Decoders.BASE64.decode(secretKeyString);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
