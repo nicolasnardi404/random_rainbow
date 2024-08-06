@@ -32,21 +32,18 @@ public class SecurityConfig {
      @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-           .csrf(csrf -> csrf.disable()) // Disable CSRF protection
+           .csrf(csrf -> csrf.disable()) 
            .authorizeHttpRequests(authorize -> authorize
-            //    .requestMatchers("/api/*").hasAnyRole("ADMIN","USER") // Permit all requests to /api/v1/auth/**
-               .requestMatchers("/admin/*").hasRole("ADMIN")   
-               .requestMatchers("/api/randomvideo/*").permitAll()
-               .requestMatchers("/api/verify").permitAll()
-               .requestMatchers("/api/v1/auth/*").permitAll()
-               .anyRequest().permitAll()// Require authentication for all other requests
+               .requestMatchers("/api/admin/**").hasRole("ADMIN")   
+               .requestMatchers("/api/users/*").hasAnyRole("ADMIN", "USER")
+               .requestMatchers("/api/**").permitAll()
             )
            .sessionManagement(session -> session
-               .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Set session creation policy to STATELESS
+               .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-           .authenticationProvider(authenticationProvider) // Configure the authentication provider
+           .authenticationProvider(authenticationProvider) 
            .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
-           .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Add the JWT authentication filter
+           .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); 
         
         return http.build();
     }
