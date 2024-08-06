@@ -55,7 +55,7 @@ public class EmailServiceImpl implements EmailService {
             // Add template variables
             Map<String, Object> params = new HashMap<>();
             params.put("username", user.getUsername());
-            params.put("verify_link", "http://localhost:3000/email-verified/" + token);
+            params.put("verify_link", "http://www.randomrainbow.art/email-verified/" + token);
             sendSmtpEmail.setParams(params);
 
             // Send the email
@@ -82,7 +82,7 @@ public class EmailServiceImpl implements EmailService {
             // Add template variables
             Map<String, Object> params = new HashMap<>();
             params.put("username", user.getUsername());
-            params.put("reset_link", "http://localhost:3000/new-password/" + resetToken);
+            params.put("reset_link", "http://www.randomrainbow.art/new-password/" + resetToken);
             sendSmtpEmail.setParams(params);
 
             // Send the email
