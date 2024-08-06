@@ -44,9 +44,10 @@ public class AuthenticationController {
     private final EmailService emailService;
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/register") 
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         try {
+            System.out.println(request);
             if (userRepository.findByUsername(request.getUsername()).isPresent()) {
                 throw new CustomException("Username already exists");
             }
@@ -58,7 +59,6 @@ public class AuthenticationController {
             user.setVerificationToken(verificationToken);
             emailService.sendVerificationEmail(user, verificationToken);
             userRepository.save(user);
-            System.out.println(user);
             return ResponseEntity.ok(AuthenticationResponse.builder().token(verificationToken).build());
         } catch (CustomException e) {
             return ResponseEntity.badRequest().body(AuthenticationResponse.builder().errorMessage(e.getMessage()).build());
