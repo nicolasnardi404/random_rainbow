@@ -132,7 +132,7 @@ class VideoDAOImp implements VideoDAO {
     @Override
     public List<Video> getAllVideosThatNeedsReview() {
         TypedQuery<Video> theQuery = entityManager.createQuery(
-                "SELECT v FROM Video v WHERE v.videoStatus = AVAILABLE", Video.class);
+                "SELECT v FROM Video v WHERE v.videoStatus = UNCHECKED", Video.class);
         List<Video> videos = theQuery.getResultList();
         return videos;
     }

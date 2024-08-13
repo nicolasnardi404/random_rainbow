@@ -14,7 +14,9 @@
     import org.springframework.web.bind.annotation.PutMapping;
     import org.springframework.web.bind.annotation.RequestBody;
     import org.springframework.web.bind.annotation.RequestMapping;
-    import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
 import com.randomrainbow.springboot.demosecurity.dto.VideoDuration;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
     import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
@@ -24,7 +26,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
     import lombok.AllArgsConstructor;
 
     @AllArgsConstructor
-    @Controller
+    @RestController
     @RequestMapping("/api/admin")
     public class AdminController {
         private VideoService videoService;
@@ -33,12 +35,14 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
         @GetMapping("/allvideos")
         public ResponseEntity<List<Video>> getAllVideos(){
             List<Video> videos = videoRepository.findAll();
+            System.out.println("FROM ALL VIDEOS: " + videos);
             return ResponseEntity.ok(videos);
         }
 
         @GetMapping("/review")
         public ResponseEntity<List<Video>> getAllVideosThatNeedReview(){
             List<Video> videos = videoService.getAllVideosThatNeedsReview();
+            System.out.println("FROM ALL REVIEWS: " + videos);
             return ResponseEntity.ok(videos);
         }
 
