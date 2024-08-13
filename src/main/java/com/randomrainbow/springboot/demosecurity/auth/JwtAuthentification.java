@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.auth;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.randomrainbow.springboot.demosecurity.service.JwtService;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class JwtAuthentification extends OncePerRequestFilter{
         final String jwt;
         final String userEmail;
 
-        
+        System.out.println(request.getHeader("Authorization"));
         // Check if Authorization header is present
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);

@@ -2,7 +2,6 @@ package com.randomrainbow.springboot.demosecurity.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +14,6 @@ import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.EmailService;
 import com.randomrainbow.springboot.demosecurity.service.JwtService;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +26,12 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    /**
+     * Registers a new user and generates an authentication token.
+     *
+     * @param request The registration request containing user details.
+     * @return AuthenticationResponse containing the generated token.
+     */
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User.builder()
                 .username(request.getUsername())
@@ -39,37 +43,60 @@ public class AuthenticationService {
                 .build();
 
         String verificationToken = UUID.randomUUID().toString();
-        user.setVerificationToken(verificationToken);
+        user.setSimpleToken(verificationToken);
         userRepository.save(user);
         emailService.sendVerificationEmail(user, verificationToken);
 
-        String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        // Generate both access and refresh tokens
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
+    /**
+     * Authenticates a user and generates an authentication token.
+     *
+     * @param request The authentication request containing email and password.
+     * @return AuthenticationResponse containing the generated token.
+     * @throws Exception If the user is not found, email is not verified, or password is incorrect.
+     */
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        System.out.println(user);
 
         if (!user.isEmailVerified()) {
             throw new Exception("Please verify your email address.");
         }
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            String token = jwtService.generateToken(user);
-            return new AuthenticationResponse(token);
+            // Generate both access and refresh tokens
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+            user.setVerificationToken(accessToken);
+            user.setRefreshToken(refreshToken);
+            userRepository.save(user);
+
+            return new AuthenticationResponse(accessToken, refreshToken);
         }
 
         throw new BadCredentialsException("Invalid email or password");
     }
 
+    /**
+     * Sends a password reset email with a reset token to the user.
+     *
+     * @param request The request containing the email of the user requesting password reset.
+     * @return AuthenticationResponse indicating success or failure.
+     */
     public AuthenticationResponse sendEmailToResetPassword(PasswordResetRequest request) {
         try {
             User user = userRepository.findByEmail(request.email())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
             String resetToken = UUID.randomUUID().toString();
-            user.setResetToken(resetToken);
+            user.setSimpleToken(resetToken);
             userRepository.save(user);
 
             emailService.sendPasswordResetEmail(user, resetToken);
@@ -80,14 +107,45 @@ public class AuthenticationService {
         }
     }
 
+    /**
+     * Updates the user's password using a reset token.
+     *
+     * @param token       The reset token used to verify the password reset request.
+     * @param newPassword The new password to set for the user.
+     * @return AuthenticationResponse indicating success or failure.
+     */
     public AuthenticationResponse updatePassword(String token, String newPassword) {
-        User user = userRepository.findByVerificationToken(token)
-                .orElseThrow();
+        User user = userRepository.findByRefreshToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid reset token"));
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setResetToken(null);
+        user.setSimpleToken(null);
         userRepository.save(user);
 
         return new AuthenticationResponse(null);
+    }
+
+    /**
+     * Refreshes the access token using the provided refresh token.
+     *
+     * @param refreshToken The refresh token to validate and use for generating a new access token.
+     * @return AuthenticationResponse containing the new access and refresh tokens.
+     */
+    public AuthenticationResponse refreshAccessToken(String refreshToken) {
+        if (jwtService.isTokenExpired(refreshToken)) {
+            throw new RuntimeException("Refresh token has expired");
+        }
+
+        String username = jwtService.extractUsername(refreshToken);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Generate new access and refresh tokens
+        String newAccessToken = jwtService.generateAccessToken(user);
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+        user.setRefreshToken(newRefreshToken);
+        userRepository.save(user);
+
+        return new AuthenticationResponse(newAccessToken, newRefreshToken);
     }
 }

@@ -63,6 +63,12 @@ public class User implements UserDetails{
 
     @Column(name = "verification_token")
     private String verificationToken;
+
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
+    @Column(name = "simple_token")
+    private String simpleToken;
     
     @Column(name = "admission_date")
     private Date admissionDate;
@@ -103,16 +109,13 @@ public class User implements UserDetails{
        return emailVerified;
     }
 
-    public void setResetToken(String resetToken) {
-        verificationToken = resetToken;
-    }
 
     @Override
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", socialMedia=" + socialMedia + ", artistDescription=" + artistDescription
                 + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified + ", verificationToken="
-                + verificationToken + ", admissionDate=" + admissionDate + "]";
+                + verificationToken + ", refreshToken=" + refreshToken + ", admissionDate=" + admissionDate + "]";
     }
 
   

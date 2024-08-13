@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.EmailService;
+import com.randomrainbow.springboot.demosecurity.service.JwtService;
 import com.randomrainbow.springboot.demosecurity.service.UserService;
 
 import ch.qos.logback.classic.pattern.Util;
@@ -20,6 +21,7 @@ import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.util.*;
 import com.randomrainbow.springboot.demosecurity.auth.*;
 import com.randomrainbow.springboot.demosecurity.auth.resetPassword.PasswordResetResponse;
+import com.randomrainbow.springboot.demosecurity.dto.TokenRefreshRequest;
 import com.randomrainbow.springboot.demosecurity.auth.resetPassword.NewPasswordRequest;
 import com.randomrainbow.springboot.demosecurity.auth.resetPassword.PasswordResetRequest;
 import com.randomrainbow.springboot.demosecurity.user.CreateUser;
@@ -38,28 +40,22 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @PostMapping("/register") 
+    @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         try {
-            System.out.println(request);
             if (userRepository.findByUsername(request.getUsername()).isPresent()) {
                 throw new CustomException("Username already exists");
             }
             if (userRepository.findByEmail(request.getEmail()).isPresent()) {
                 throw new CustomException("Email already exists");
             }
-            User user = createUser(request);
-            String verificationToken = UUID.randomUUID().toString();
-            user.setVerificationToken(verificationToken);
-            emailService.sendVerificationEmail(user, verificationToken);
-            userRepository.save(user);
-            return ResponseEntity.ok(AuthenticationResponse.builder().token(verificationToken).build());
+            AuthenticationResponse response = service.register(request);
+            return ResponseEntity.ok(response);
         } catch (CustomException e) {
             return ResponseEntity.badRequest().body(AuthenticationResponse.builder().errorMessage(e.getMessage()).build());
         } catch (Exception e) {
@@ -67,29 +63,29 @@ public class AuthenticationController {
         }
     }
 
-    private User createUser(RegisterRequest request) {
-         User user = User.builder()
-                .username(request.getUsername())
-                .firstName(request.getFirstname())
-                .lastName(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.ROLE_USER)
-                .admissionDate(new Date())
-                .build();
-        return user;
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        try {
+            AuthenticationResponse response = service.authenticate(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(null, e.getMessage()));
+        }
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) throws Exception {
-        System.out.println(service.authenticate(request));
-        return ResponseEntity.ok(service.authenticate(request));
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
+        try {
+            AuthenticationResponse response = service.refreshAccessToken(request.refreshToken());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest request) {
         try {
-            System.out.println(request);
             AuthenticationResponse response = service.sendEmailToResetPassword(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
