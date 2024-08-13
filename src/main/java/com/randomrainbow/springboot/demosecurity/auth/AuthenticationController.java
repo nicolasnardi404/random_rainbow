@@ -69,13 +69,14 @@ public class AuthenticationController {
             AuthenticationResponse response = service.authenticate(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(null, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(null, null, e.getMessage()));
         }
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
         try {
+            System.out.println("HELL FROM REFRESH");
             AuthenticationResponse response = service.refreshAccessToken(request.refreshToken());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {

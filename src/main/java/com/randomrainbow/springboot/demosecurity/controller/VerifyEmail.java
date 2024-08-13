@@ -21,7 +21,7 @@ public class VerifyEmail {
 
     @GetMapping
     public ResponseEntity<?> verify(@RequestParam("token") String token) {
-        Optional<User> userOptional = userRepository.findByVerificationToken(token);
+        Optional<User> userOptional = userRepository.findBySimpleToken(token);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setEmailVerified(true); 

@@ -61,11 +61,11 @@ public class User implements UserDetails{
     @Column(name = "email_verified")
     private boolean emailVerified;
 
-    @Column(name = "verification_token")
-    private String verificationToken;
+    // @Column(name = "access_token")
+    // private String accessToken;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
+    // @Column(name = "refresh_token")
+    // private String refreshToken;
 
     @Column(name = "simple_token")
     private String simpleToken;
@@ -114,8 +114,7 @@ public class User implements UserDetails{
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", socialMedia=" + socialMedia + ", artistDescription=" + artistDescription
-                + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified + ", verificationToken="
-                + verificationToken + ", refreshToken=" + refreshToken + ", admissionDate=" + admissionDate + "]";
+                + ", email=" + email + ", role=" + role + ", emailVerified=" + emailVerified + "admissionDate=" + admissionDate + "]";
     }
 
   

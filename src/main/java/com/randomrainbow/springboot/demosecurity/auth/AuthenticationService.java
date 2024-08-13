@@ -42,16 +42,14 @@ public class AuthenticationService {
                 .role(Role.ROLE_USER)
                 .build();
 
-        String verificationToken = UUID.randomUUID().toString();
-        user.setSimpleToken(verificationToken);
+        String token = UUID.randomUUID().toString();
+        user.setSimpleToken(token);
         userRepository.save(user);
-        emailService.sendVerificationEmail(user, verificationToken);
+        emailService.sendVerificationEmail(user, token);
 
         // Generate both access and refresh tokens
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        user.setRefreshToken(refreshToken);
-        userRepository.save(user);
 
         return new AuthenticationResponse(accessToken, refreshToken);
     }
@@ -74,9 +72,6 @@ public class AuthenticationService {
             // Generate both access and refresh tokens
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
-            user.setVerificationToken(accessToken);
-            user.setRefreshToken(refreshToken);
-            userRepository.save(user);
 
             return new AuthenticationResponse(accessToken, refreshToken);
         }
@@ -115,7 +110,7 @@ public class AuthenticationService {
      * @return AuthenticationResponse indicating success or failure.
      */
     public AuthenticationResponse updatePassword(String token, String newPassword) {
-        User user = userRepository.findByRefreshToken(token)
+        User user = userRepository.findBySimpleToken(token)
                 .orElseThrow(() -> new RuntimeException("Invalid reset token"));
 
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -131,20 +126,22 @@ public class AuthenticationService {
      * @param refreshToken The refresh token to validate and use for generating a new access token.
      * @return AuthenticationResponse containing the new access and refresh tokens.
      */
-    public AuthenticationResponse refreshAccessToken(String refreshToken) {
-        if (jwtService.isTokenExpired(refreshToken)) {
-            throw new RuntimeException("Refresh token has expired");
-        }
+    public AuthenticationResponse refreshAccessToken(String accessToken) {
+        // if (jwtService.isTokenExpired(accessToken)) {
+        //     throw new RuntimeException("access token has expired");
+        // }
+        System.out.println("hello from token");
 
-        String username = jwtService.extractUsername(refreshToken);
-        User user = userRepository.findByEmail(username)
+        String username = jwtService.extractUsername(accessToken);
+        System.out.println(username);
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // Generate new access and refresh tokens
+            
+        System.out.println("hello2");
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
-        user.setRefreshToken(newRefreshToken);
-        userRepository.save(user);
+        System.out.println("hello5");
+        // userRepository.save(user);
 
         return new AuthenticationResponse(newAccessToken, newRefreshToken);
     }

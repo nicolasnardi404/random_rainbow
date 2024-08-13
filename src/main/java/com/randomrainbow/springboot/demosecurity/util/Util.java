@@ -20,7 +20,4 @@ public class Util {
     return generatedString;
 }
 
-public String generateVerificationToken() {
-  return UUID.randomUUID().toString();
-}
 }

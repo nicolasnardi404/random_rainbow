@@ -11,11 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AuthenticationResponse {
 
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private String errorMessage; // Optional field for error messages
 
-    // Constructor with token only
-    public AuthenticationResponse(String token) {
-        this.token = token;
+    public AuthenticationResponse(String accessToken, String refreshToken) {
+        this.refreshToken = refreshToken;
+        this.accessToken = accessToken;
+    }
+
+    public AuthenticationResponse(String errorMessage){
+        this.errorMessage = errorMessage;
     }
 }
