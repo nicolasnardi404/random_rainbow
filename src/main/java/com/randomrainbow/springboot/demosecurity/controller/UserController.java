@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @PostMapping("/{idUser}/videos/addNewVideo")
-    public ResponseEntity<Video> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
+    public ResponseEntity<?> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
         Optional<User> userOptional = userRepository.findById(idUser);
 
         if (userOptional.isPresent()){
@@ -99,6 +99,11 @@ public class UserController {
             if (existingVideosCount >= 3) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
             }
+
+        Optional<Video> videoOptional= videoRepository.findByVideoLink(video.getVideoLink());
+        if(videoOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Video Link already used");
+        }
 
             Video newVideo = new Video();
             newVideo.setUser(user);

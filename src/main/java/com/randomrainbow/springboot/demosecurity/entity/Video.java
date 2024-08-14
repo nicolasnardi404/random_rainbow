@@ -3,9 +3,13 @@ package com.randomrainbow.springboot.demosecurity.entity;
 import java.util.Date;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-// if the id will be initialized at the data base how do i define the contructor
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "videos")
 public class Video {
@@ -103,10 +107,6 @@ public class Video {
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
     }
-
-    public Video() {
-    }
-
 
     public int getId() {
         return id;

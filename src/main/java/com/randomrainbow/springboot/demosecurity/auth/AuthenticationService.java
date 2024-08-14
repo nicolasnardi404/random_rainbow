@@ -130,8 +130,6 @@ public class AuthenticationService {
         // if (jwtService.isTokenExpired(accessToken)) {
         //     throw new RuntimeException("access token has expired");
         // }
-        System.out.println("hello from token");
-
         String username = jwtService.extractUsername(accessToken);
         System.out.println(username);
         User user = userRepository.findByUsername(username)

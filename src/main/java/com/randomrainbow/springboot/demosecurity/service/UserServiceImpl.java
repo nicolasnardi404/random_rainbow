@@ -53,15 +53,4 @@ public class UserServiceImpl implements UserService {
 		return logIn;
 	}	
 
-
-	private String handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-		if (e.getMessage().contains("user.username_UNIQUE")) {
-			return "Username already exists";
-		} else if (e.getMessage().contains("user.email_UNIQUE")) {
-			return "Email already exists";
-		} else {
-			return "An unexpected error occurred";
-		}	
-	}
-
 }
