@@ -1,3 +1,4 @@
+com/randomrainbow/springboot/demosecurity/dto/TokenRefreshRequest.class
 com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.class
 com/randomrainbow/springboot/demosecurity/config/SecurityConfig.class
 com/randomrainbow/springboot/demosecurity/entity/Role.class
@@ -16,7 +17,7 @@ com/randomrainbow/springboot/demosecurity/config/Webconfig.class
 com/randomrainbow/springboot/demosecurity/service/EmailService.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest$RegisterRequestBuilder.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest$AuthenticationRequestBuilder.class
-com/randomrainbow/springboot/demosecurity/controller/VideoController.class
+com/randomrainbow/springboot/demosecurity/dto/VideoStatusUpdateRequest.class
 com/randomrainbow/springboot/demosecurity/entity/User$UserBuilder.class
 com/randomrainbow/springboot/demosecurity/dao/RoleDao.class
 com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetResponse.class

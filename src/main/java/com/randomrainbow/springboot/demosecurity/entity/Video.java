@@ -49,14 +49,27 @@ public class Video {
     @Column(name = "approved_date")
     private Date approvedDate;
 
+    @Column(name = "message_error")
+    private String messageError;
+
   
 
     @Override
     public String toString() {
         return "Video [id=" + id + ", idUser=" + idUser + ", title=" + title + ", videoDescription=" + videoDescription
                 + ", videoLink=" + videoLink + ", duration=" + duration + ", active=" + active + ", videoStatus="
-                + videoStatus + ", endpoint=" + endpoint + ", SubmissionDate=" + submissionDate + ", ApprovedDate="
-                + approvedDate + "]";
+                + videoStatus + ", endpoint=" + endpoint + ", submissionDate=" + submissionDate + ", approvedDate="
+                + approvedDate + ", messageError=" + messageError + "]";
+    }
+
+
+    public String getMessageError() {
+        return messageError;
+    }
+
+
+    public void setMessageError(String messageError) {
+        this.messageError = messageError;
     }
 
 

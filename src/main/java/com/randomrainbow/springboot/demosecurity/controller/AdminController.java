@@ -1,6 +1,7 @@
     package com.randomrainbow.springboot.demosecurity.controller;
 
 
+    import java.util.ArrayList;
     import java.util.Date;
     import java.util.List;
     import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
 import com.randomrainbow.springboot.demosecurity.dto.VideoDuration;
+import com.randomrainbow.springboot.demosecurity.dto.VideoStatusUpdateRequest;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
     import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
     import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
@@ -88,32 +90,21 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
             }
         }
 
-        @PutMapping("/videos/{id}/toggle-approve")
-        public ResponseEntity<Video> toggleApproveVideo(@PathVariable int id) {
-            Optional<Video> videoOptional = videoRepository.findById(id);
+        @PutMapping("/videos/status")
+        public ResponseEntity<Video> updateVideoStatus(@RequestBody VideoStatusUpdateRequest statusUpdate) {
+            Optional<Video> videoOptional = videoRepository.findById(statusUpdate.id());
             if (videoOptional.isPresent()) {
                 Video video = videoOptional.get();
-                video.setVideoStatus(VideoStatus.AVAILABLE);
-                video.setApprovedDate(new Date());
-                videoService.save(video);
-                return ResponseEntity.ok(video);
-            } else {
-                return ResponseEntity.notFound().build();
+                video.setVideoStatus(statusUpdate.videoStatus());
+                if (statusUpdate.error() != null) {
+                    video.setMessageError(statusUpdate.error());
             }
+            videoService.save(video);
+            return ResponseEntity.ok(video);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-
-        @PutMapping("/videos/{id}/toggle-cancel")
-        public ResponseEntity<Video> toggleCancelVideo(@PathVariable int id) {
-            Optional<Video> videoOptional = videoRepository.findById(id);
-            if (videoOptional.isPresent()) {
-                Video video = videoOptional.get();
-                video.setVideoStatus(VideoStatus.DOESNT_RESPECT_GUIDELINES);
-                videoService.save(video);
-                return ResponseEntity.ok(video);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        }
+    }
 
         @PutMapping("/videos/duration/{id}")
         public ResponseEntity<Video> setVideoDuration(@PathVariable int id, @RequestBody VideoDuration videoDuration) {
