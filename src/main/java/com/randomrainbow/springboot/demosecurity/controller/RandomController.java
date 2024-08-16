@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.randomrainbow.springboot.demosecurity.dto.DataUserProfile;
 import com.randomrainbow.springboot.demosecurity.dto.UserProfileView;
+import com.randomrainbow.springboot.demosecurity.dto.VideoRandomResponse;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
@@ -31,7 +32,8 @@ public class RandomController {
         if (randomVideo == null) {
             return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
         }
-        return ResponseEntity.ok(randomVideo);
+    
+        return ResponseEntity.ok(randomVideo.getEndpoint());
     }
 
     @GetMapping("/video/{token}")
@@ -40,7 +42,10 @@ public class RandomController {
         if (video == null) {
             return ResponseEntity.status(404).body("No video found with the specified token.");
         }
-        return ResponseEntity.ok(video);
+        VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle());
+
+        System.out.println(videoResponse);
+        return ResponseEntity.ok(videoResponse);
     }
 
     @GetMapping("/videosbyartist/{userId}")

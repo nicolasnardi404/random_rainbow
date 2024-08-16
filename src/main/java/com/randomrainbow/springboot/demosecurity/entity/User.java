@@ -3,6 +3,7 @@ package com.randomrainbow.springboot.demosecurity.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,6 +49,7 @@ public class User implements UserDetails{
     private String socialMedia;
 
     @Column(name = "artist_description")
+    @Size(min = 1, max = 2048, message = "Video description can be at max 2048 characters long.")
     private String artistDescription;
 
     @Column(name = "email", unique = true, nullable = false)
@@ -61,11 +63,6 @@ public class User implements UserDetails{
     @Column(name = "email_verified")
     private boolean emailVerified;
 
-    // @Column(name = "access_token")
-    // private String accessToken;
-
-    // @Column(name = "refresh_token")
-    // private String refreshToken;
 
     @Column(name = "simple_token")
     private String simpleToken;

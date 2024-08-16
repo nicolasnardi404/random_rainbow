@@ -28,6 +28,7 @@ public class Video {
 
     @Column(name = "video_description")
     @NotNull(message = "Video Description is required")
+    @Size(min = 1, max = 2048, message = "Video description can be at max 2048 characters long.")
     private String videoDescription;
 
     @Column(name = "video_link")
