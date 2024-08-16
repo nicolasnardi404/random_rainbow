@@ -32,8 +32,10 @@ public class RandomController {
         if (randomVideo == null) {
             return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
         }
-    
-        return ResponseEntity.ok(randomVideo.getEndpoint());
+        
+        VideoRandomResponse videoResponse = new VideoRandomResponse(randomVideo.getVideoLink(), randomVideo.getVideoDescription(), randomVideo.getUser().getUsername(), randomVideo.getTitle(), randomVideo.getEndpoint());
+        return ResponseEntity.ok(videoResponse);
+
     }
 
     @GetMapping("/video/{token}")
@@ -42,9 +44,8 @@ public class RandomController {
         if (video == null) {
             return ResponseEntity.status(404).body("No video found with the specified token.");
         }
-        VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle());
 
-        System.out.println(videoResponse);
+        VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle(), video.getEndpoint());
         return ResponseEntity.ok(videoResponse);
     }
 

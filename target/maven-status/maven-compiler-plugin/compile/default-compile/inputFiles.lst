@@ -1,6 +1,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoDuration.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/UserProfileView.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/util/Util.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoRandomResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/user/CreateUser.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/config/ApplicationConfig.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/RegistrationController.java
@@ -32,6 +33,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/VideoService.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/RegisterRequest.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoErrorMessageUpdateRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoStatusUpdateRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/VideoController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/DemosecurityApplication.java
