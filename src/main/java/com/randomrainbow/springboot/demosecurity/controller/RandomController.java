@@ -49,9 +49,9 @@ public class RandomController {
         return ResponseEntity.ok(videoResponse);
     }
 
-    @GetMapping("/videosbyartist/{userId}")
-    public ResponseEntity<?> getVideoByArtist(@PathVariable long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    @GetMapping("/videosbyartist/{username}")
+    public ResponseEntity<?> getVideoByArtist(@PathVariable String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             DataUserProfile dataUserProfile = new DataUserProfile(user.getArtistDescription(), user.getSocialMedia());
