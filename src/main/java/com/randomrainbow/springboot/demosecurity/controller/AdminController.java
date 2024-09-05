@@ -23,7 +23,7 @@ import com.randomrainbow.springboot.demosecurity.dto.VideoStatusUpdateRequest;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
     import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
     import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
-    import com.randomrainbow.springboot.demosecurity.service.VideoService;
+
     import jakarta.transaction.Transactional;
     import lombok.AllArgsConstructor;
 
@@ -31,7 +31,6 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
     @RestController
     @RequestMapping("/api/admin")
     public class AdminController {
-        private VideoService videoService;
         private VideoRepository videoRepository;
 
         @GetMapping("/allvideos")
@@ -43,7 +42,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
 
         @GetMapping("/review")
         public ResponseEntity<List<Video>> getAllVideosThatNeedReview(){
-            List<Video> videos = videoService.getAllVideosThatNeedsReview();
+            List<Video> videos = videoRepository.findVideosThatNeedReview();
             System.out.println("FROM ALL REVIEWS: " + videos);
             return ResponseEntity.ok(videos);
         }
@@ -68,7 +67,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
                     video.setTitle(updatedVideo.title());
                     video.setVideoDescription(updatedVideo.videoDescription());
                     video.setVideoLink(updatedVideo.videoLink());
-                    videoService.save(video);
+                    videoRepository.save(video);
                     return ResponseEntity.ok(video);
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -99,7 +98,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
                 if (statusUpdate.error() != null) {
                     video.setMessageError(statusUpdate.error());
             }
-            videoService.save(video);
+            videoRepository.save(video);
             return ResponseEntity.ok(video);
         } else {
             return ResponseEntity.notFound().build();
@@ -112,7 +111,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
             if (videoOptional.isPresent()) {
                 Video video = videoOptional.get();
                 video.setDuration(videoDuration.duration());
-                videoService.save(video);
+                videoRepository.save(video);
                 return ResponseEntity.ok(video);
             } else {
                 return ResponseEntity.notFound().build();

@@ -97,7 +97,7 @@ public class AuthenticationController {
     @PostMapping("/new-password/{token}")
     public ResponseEntity<?> newPassword(@PathVariable String token, @RequestBody NewPasswordRequest request) {
         try {
-            service.updatePassword(token, request.newPassword());
+            service.updatePassword(token, request.password());
             return ResponseEntity.ok("Password successfully updated.");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error processing new password request");

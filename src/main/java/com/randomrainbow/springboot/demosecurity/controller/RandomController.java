@@ -15,7 +15,8 @@ import com.randomrainbow.springboot.demosecurity.dto.VideoRandomResponse;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
-import com.randomrainbow.springboot.demosecurity.service.VideoService;
+import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
+
 
 import lombok.AllArgsConstructor;
 
@@ -23,12 +24,12 @@ import lombok.AllArgsConstructor;
 @Controller
 @RequestMapping("/api/randomvideo")
 public class RandomController {
-    private VideoService videoService;
+    private VideoRepository videoRepository;
     private UserRepository userRepository;
 
     @GetMapping("/{maxDuration}")
     public ResponseEntity<?> getRandomVideo(@PathVariable int maxDuration) {
-        Video randomVideo = videoService.getRandomApprovedVideoByDuration(maxDuration);
+        Video randomVideo = videoRepository.getRandomApprovedVideoByDuration(maxDuration);
         if (randomVideo == null) {
             return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
         }
@@ -40,13 +41,15 @@ public class RandomController {
 
     @GetMapping("/video/{token}")
     public ResponseEntity<?> getVideoByToken(@PathVariable String token) {  
-        Video video = videoService.getVideoByToken(token);
-        if (video == null) {
-            return ResponseEntity.status(404).body("No video found with the specified token.");
+        Optional<Video> optionalVideo = videoRepository.findByEndpoint(token);
+        if(optionalVideo.isPresent()){
+            Video video = optionalVideo.get();
+            VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle(), video.getEndpoint());
+            return ResponseEntity.ok(videoResponse);
+        } else {
+            return ResponseEntity.notFound().build();
         }
 
-        VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle(), video.getEndpoint());
-        return ResponseEntity.ok(videoResponse);
     }
 
     @GetMapping("/videosbyartist/{username}")
@@ -54,8 +57,11 @@ public class RandomController {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
+            System.out.println("i am the user " + user);
             DataUserProfile dataUserProfile = new DataUserProfile(user.getArtistDescription(), user.getSocialMedia());
-            List<Video> allVideosApprovedByArtist = videoService.getAllVideosApprovedByArtist(user.getId());
+            System.out.println("i am think the error is down here");
+            List<Video> allVideosApprovedByArtist = videoRepository.findApprovedVideosByUserId(user.getId());
+            System.out.println("i am the error");
 
             UserProfileView userProfileView = new UserProfileView(user.getUsername(), allVideosApprovedByArtist, dataUserProfile);
 

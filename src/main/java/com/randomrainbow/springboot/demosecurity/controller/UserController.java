@@ -7,7 +7,6 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
-import com.randomrainbow.springboot.demosecurity.service.VideoService;
 import com.randomrainbow.springboot.demosecurity.util.Util;
 
 import lombok.AllArgsConstructor;
@@ -28,12 +27,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final VideoService videoService;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
 
     @GetMapping("/{idUser}/videos")
-    public ResponseEntity<?> getUserVideos(@PathVariable("idUser") User idUser) {
+    public ResponseEntity<?> getUserVideos(@PathVariable("idUser") Long idUser) {
         try {
             Optional<List<Video>> listVideos = videoRepository.findAllVideosByIdUser(idUser);
             if (listVideos.isPresent()) {
@@ -105,7 +103,7 @@ public class UserController {
                 Video video = optionalVideo.get();
                 video.setTitle(updatedVideo.getTitle());
                 video.setVideoDescription(updatedVideo.getVideoDescription());
-                videoService.save(video);
+                videoRepository.save(video);
                 return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.notFound().build();
@@ -117,12 +115,14 @@ public class UserController {
     }
 
     @PostMapping("/{idUser}/videos/addNewVideo")
-    public ResponseEntity<?> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
+    public ResponseEntity<?> showFormAdd(@PathVariable("idUser") long idUser, @RequestBody Video video) {
         Optional<User> userOptional = userRepository.findById(idUser);
+        System.out.println("numer one");
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            Long existingVideosCount = videoService.countVideoByUserId(idUser);
+            Long existingVideosCount = videoRepository.countVideosByUserId(idUser);
+    
             if (existingVideosCount >= 3) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
             }
@@ -153,7 +153,7 @@ public class UserController {
     @DeleteMapping("/{idUser}/videos/delete/{videoId}")
     public ResponseEntity<String> deleteVideo(@PathVariable("idUser") long idUser,
             @PathVariable("videoId") int videoId) {
-        videoService.deleteById(videoId);
+        videoRepository.deleteById(videoId);
         return ResponseEntity.ok("Video deleted successfully");
     }
 }
