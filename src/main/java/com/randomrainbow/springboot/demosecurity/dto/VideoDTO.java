@@ -1,4 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.dto;
 
-public record VideoDTO (String title, String videoDescription, String videoLink){
+import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
+
+public record VideoDTO (int videoId, String title, String videoDescription, String videoLink, VideoStatus videoStatus){
 }

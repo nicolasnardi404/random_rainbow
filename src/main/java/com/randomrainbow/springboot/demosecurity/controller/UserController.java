@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@RestController 
+@RestController
 @AllArgsConstructor
-@RequestMapping("/api/users") 
+@RequestMapping("/api/users")
 public class UserController {
 
     private final VideoService videoService;
@@ -31,13 +33,26 @@ public class UserController {
     private final VideoRepository videoRepository;
 
     @GetMapping("/{idUser}/videos")
-    public ResponseEntity<List<Video>> getUserVideos(@PathVariable("idUser") User idUser) {
+    public ResponseEntity<?> getUserVideos(@PathVariable("idUser") User idUser) {
         try {
             Optional<List<Video>> listVideos = videoRepository.findAllVideosByIdUser(idUser);
-            if(listVideos.isPresent()){
-                return ResponseEntity.ok(listVideos.get()); 
-            } else{
-                return ResponseEntity.notFound().build();  
+            if (listVideos.isPresent()) {
+            List<Video> list = listVideos.get();
+
+            List<VideoDTO> videoDTOs = list.stream()
+            .map(video -> new VideoDTO(
+                video.getId(),
+                video.getTitle(),
+                video.getVideoDescription(),
+                video.getVideoLink(),
+                video.getVideoStatus()
+            ))
+            .collect(Collectors.toList());
+
+    
+                return ResponseEntity.ok(videoDTOs);
+            } else {
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -49,41 +64,41 @@ public class UserController {
         Optional<User> userOptional = userRepository.findById(idUser);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            System.out.println(user.getArtistDescription());
-            System.out.println(user.getSocialMedia());
             return ResponseEntity.ok(new DataUserProfile(user.getArtistDescription(), user.getSocialMedia()));
         }
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/profile/{idUser}")
-    public ResponseEntity<?> updateProfile(@PathVariable("idUser") int idUser, @RequestBody DataUserProfile userProfile) {
-    Optional<User> userOptional = userRepository.findById(idUser);
-    if (userOptional.isPresent()) {
-        User user = userOptional.get();
-        user.setArtistDescription(userProfile.artistDescription());
-        user.setSocialMedia(userProfile.socialMedia());
+    public ResponseEntity<?> updateProfile(@PathVariable("idUser") int idUser,
+            @RequestBody DataUserProfile userProfile) {
+        Optional<User> userOptional = userRepository.findById(idUser);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setArtistDescription(userProfile.artistDescription());
+            user.setSocialMedia(userProfile.socialMedia());
 
-        userRepository.save(user);
-        return ResponseEntity.ok().build(); 
-    }
-    return ResponseEntity.notFound().build(); 
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
-     @GetMapping("/{idUser}/videos/{videoId}")
-    public ResponseEntity<VideoDTO> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
+    @GetMapping("/{idUser}/videos/{videoId}")
+    public ResponseEntity<VideoDTO> getVideoById(@PathVariable("idUser") long idUser,
+            @PathVariable("videoId") int videoId) {
         Optional<Video> videoOptional = videoRepository.findById(videoId);
         if (videoOptional.isPresent()) {
             Video video = videoOptional.get();
-            VideoDTO videoDTO = new VideoDTO(video.getTitle(),video.getVideoDescription(), video.getVideoLink());
+            VideoDTO videoDTO = new VideoDTO(video.getId(), video.getTitle(), video.getVideoDescription(), video.getVideoLink(), video.getVideoStatus());
             return ResponseEntity.ok(videoDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-    }  
+    }
 
     @PutMapping("/{idUser}/videos/update/{videoId}")
-    public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody Video updatedVideo) {
+    public ResponseEntity<?> updateVideo(@PathVariable("videoId") int videoId, @RequestBody Video updatedVideo) {
         try {
             Optional<Video> optionalVideo = videoRepository.findById(videoId);
             if (optionalVideo.isPresent()) {
@@ -91,7 +106,7 @@ public class UserController {
                 video.setTitle(updatedVideo.getTitle());
                 video.setVideoDescription(updatedVideo.getVideoDescription());
                 videoService.save(video);
-                return ResponseEntity.ok(video);
+                return ResponseEntity.ok().build();
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -105,17 +120,17 @@ public class UserController {
     public ResponseEntity<?> showFormAdd(@PathVariable("idUser") int idUser, @RequestBody Video video) {
         Optional<User> userOptional = userRepository.findById(idUser);
 
-        if (userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             Long existingVideosCount = videoService.countVideoByUserId(idUser);
             if (existingVideosCount >= 3) {
                 return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(null);
             }
 
-        Optional<Video> videoOptional= videoRepository.findByVideoLink(video.getVideoLink());
-        if(videoOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Video Link already used");
-        }
+            Optional<Video> videoOptional = videoRepository.findByVideoLink(video.getVideoLink());
+            if (videoOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Video Link already used");
+            }
 
             Video newVideo = new Video();
             newVideo.setUser(user);
@@ -126,17 +141,18 @@ public class UserController {
             newVideo.setActive(true);
             newVideo.setVideoStatus(VideoStatus.UNCHECKED);
             newVideo.setEndpoint(Util.randomString());
-            
-            System.out.println(newVideo);
-            return ResponseEntity.ok(videoRepository.save(newVideo));
-            
+
+            videoRepository.save(newVideo);
+            return ResponseEntity.ok().build();
+
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
     }
 
     @DeleteMapping("/{idUser}/videos/delete/{videoId}")
-    public ResponseEntity<String> deleteVideo(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
+    public ResponseEntity<String> deleteVideo(@PathVariable("idUser") long idUser,
+            @PathVariable("videoId") int videoId) {
         videoService.deleteById(videoId);
         return ResponseEntity.ok("Video deleted successfully");
     }
