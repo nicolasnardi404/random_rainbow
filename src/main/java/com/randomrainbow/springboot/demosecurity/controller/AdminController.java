@@ -17,7 +17,7 @@
     import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.randomrainbow.springboot.demosecurity.dto.UpdateVideo;
+import com.randomrainbow.springboot.demosecurity.dto.VideoDTO;
 import com.randomrainbow.springboot.demosecurity.dto.VideoDuration;
 import com.randomrainbow.springboot.demosecurity.dto.VideoStatusUpdateRequest;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
@@ -60,7 +60,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
         }
 
         @PutMapping("/videos/{videoId}")
-        public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody UpdateVideo updatedVideo) {
+        public ResponseEntity<Video> updateVideo(@PathVariable("videoId") int videoId, @RequestBody VideoDTO updatedVideo) {
             try {
                 Optional<Video> optionalVideo = videoRepository.findById(videoId);
                 if (optionalVideo.isPresent()) {

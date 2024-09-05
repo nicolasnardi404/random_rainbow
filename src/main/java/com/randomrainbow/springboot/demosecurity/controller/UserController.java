@@ -1,6 +1,7 @@
 package com.randomrainbow.springboot.demosecurity.controller;
 
 import com.randomrainbow.springboot.demosecurity.dto.DataUserProfile;
+import com.randomrainbow.springboot.demosecurity.dto.VideoDTO;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
@@ -11,6 +12,7 @@ import com.randomrainbow.springboot.demosecurity.util.Util;
 
 import lombok.AllArgsConstructor;
 
+import org.aspectj.weaver.patterns.OrPointcut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,16 @@ public class UserController {
 
     @GetMapping("/{idUser}/videos")
     public ResponseEntity<List<Video>> getUserVideos(@PathVariable("idUser") User idUser) {
-        List<Video> videos = videoService.findVideosByUser(idUser);
-        return ResponseEntity.ok(videos); // Returns the list of videos with HTTP 200 OK
+        try {
+            Optional<List<Video>> listVideos = videoRepository.findAllVideosByIdUser(idUser);
+            if(listVideos.isPresent()){
+                return ResponseEntity.ok(listVideos.get()); 
+            } else{
+                return ResponseEntity.notFound().build();  
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @GetMapping("/profile/{idUser}")
@@ -61,10 +71,12 @@ public class UserController {
     }
 
      @GetMapping("/{idUser}/videos/{videoId}")
-    public ResponseEntity<Video> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
+    public ResponseEntity<VideoDTO> getVideoById(@PathVariable("idUser") long idUser, @PathVariable("videoId") int videoId) {
         Optional<Video> videoOptional = videoRepository.findById(videoId);
         if (videoOptional.isPresent()) {
-            return ResponseEntity.ok(videoOptional.get());
+            Video video = videoOptional.get();
+            VideoDTO videoDTO = new VideoDTO(video.getTitle(),video.getVideoDescription(), video.getVideoLink());
+            return ResponseEntity.ok(videoDTO);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
