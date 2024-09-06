@@ -1,7 +1,12 @@
 package com.randomrainbow.springboot.demosecurity.util;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.randomrainbow.springboot.demosecurity.dto.VideoDTO;
+import com.randomrainbow.springboot.demosecurity.entity.Video;
 
 public class Util {
 

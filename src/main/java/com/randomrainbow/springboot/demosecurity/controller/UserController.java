@@ -2,6 +2,8 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import com.randomrainbow.springboot.demosecurity.dto.DataUserProfile;
 import com.randomrainbow.springboot.demosecurity.dto.VideoDTO;
+import com.randomrainbow.springboot.demosecurity.dto.VideoWithEndpointAndErrorDTO;
+import com.randomrainbow.springboot.demosecurity.dto.VideoWithEndpointDTO;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
@@ -31,24 +33,15 @@ public class UserController {
     private final VideoRepository videoRepository;
 
     @GetMapping("/{idUser}/videos")
-    public ResponseEntity<?> getUserVideos(@PathVariable("idUser") Long idUser) {
+    public ResponseEntity<List<VideoWithEndpointAndErrorDTO>> getUserVideos(@PathVariable("idUser") Long idUser) {
         try {
             Optional<List<Video>> listVideos = videoRepository.findAllVideosByIdUser(idUser);
             if (listVideos.isPresent()) {
             List<Video> list = listVideos.get();
 
-            List<VideoDTO> videoDTOs = list.stream()
-            .map(video -> new VideoDTO(
-                video.getId(),
-                video.getTitle(),
-                video.getVideoDescription(),
-                video.getVideoLink(),
-                video.getVideoStatus()
-            ))
-            .collect(Collectors.toList());
+            List<VideoWithEndpointAndErrorDTO> videoDTO = videoRepository.filterForVideoListWithEndpointAndErrorDTO(list);
 
-    
-                return ResponseEntity.ok(videoDTOs);
+            return ResponseEntity.ok(videoDTO);
             } else {
                 return ResponseEntity.notFound().build();
             }
@@ -56,6 +49,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping("/profile/{idUser}")
     public ResponseEntity<DataUserProfile> getProfile(@PathVariable("idUser") int idUser) {
@@ -86,13 +80,18 @@ public class UserController {
     public ResponseEntity<VideoDTO> getVideoById(@PathVariable("idUser") long idUser,
             @PathVariable("videoId") int videoId) {
         Optional<Video> videoOptional = videoRepository.findById(videoId);
-        if (videoOptional.isPresent()) {
-            Video video = videoOptional.get();
-            VideoDTO videoDTO = new VideoDTO(video.getId(), video.getTitle(), video.getVideoDescription(), video.getVideoLink(), video.getVideoStatus());
-            return ResponseEntity.ok(videoDTO);
-        } else {
+        Optional<User> userOptional = userRepository.findById(idUser);
+        if (!videoOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+            Video video = videoOptional.get();
+            User user = userOptional.get();
+            VideoDTO videoDTO = new VideoDTO(video.getId(), video.getTitle(), video.getVideoDescription(), video.getVideoLink(), video.getVideoStatus(),user.getUsername());
+            return ResponseEntity.ok(videoDTO);
+       
     }
 
     @PutMapping("/{idUser}/videos/update/{videoId}")
