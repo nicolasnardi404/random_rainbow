@@ -27,6 +27,11 @@ public class RandomController {
     private VideoRepository videoRepository;
     private UserRepository userRepository;
 
+    @GetMapping("/server/keep-up")
+    public ResponseEntity<String> keepServerAlive() {
+        return ResponseEntity.ok("i am breathing, said the server");
+    }
+
     @GetMapping("/{maxDuration}")
     public ResponseEntity<?> getRandomVideo(@PathVariable int maxDuration) {
         Video randomVideo = videoRepository.getRandomApprovedVideoByDuration(maxDuration);
