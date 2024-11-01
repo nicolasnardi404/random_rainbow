@@ -76,7 +76,6 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody TokenRefreshRequest request) {
         try {
-            System.out.println("HELL FROM REFRESH");
             AuthenticationResponse response = service.refreshAccessToken(request.refreshToken());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {

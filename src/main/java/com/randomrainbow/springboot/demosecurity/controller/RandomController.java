@@ -63,7 +63,7 @@ public class RandomController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             System.out.println("i am the user " + user);
-            DataUserProfile dataUserProfile = new DataUserProfile(user.getArtistDescription(), user.getSocialMedia());
+            DataUserProfile dataUserProfile = new DataUserProfile(user.getArtistDescription(), user.getSocialMedia(), user.getUsername());
             System.out.println("i am think the error is down here");
             List<Video> allVideosApprovedByArtist = videoRepository.findApprovedVideosByUserId(user.getId());
             System.out.println("i am the error");

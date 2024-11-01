@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.controller;
 
+import com.randomrainbow.springboot.demosecurity.auth.AuthenticationResponse;
 import com.randomrainbow.springboot.demosecurity.dto.DataUserProfile;
 import com.randomrainbow.springboot.demosecurity.dto.VideoDTO;
 import com.randomrainbow.springboot.demosecurity.dto.VideoWithEndpointAndErrorDTO;
@@ -10,6 +11,8 @@ import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
 import com.randomrainbow.springboot.demosecurity.util.Util;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import lombok.AllArgsConstructor;
 
@@ -17,6 +20,7 @@ import org.aspectj.weaver.patterns.OrPointcut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.randomrainbow.springboot.demosecurity.service.JwtService;
 
 import java.util.Date;
 import java.util.List;
@@ -31,6 +35,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
+    private final JwtService jwtService;
 
     @GetMapping("/{idUser}/videos")
     public ResponseEntity<List<VideoWithEndpointAndErrorDTO>> getUserVideos(@PathVariable("idUser") Long idUser) {
@@ -56,25 +61,39 @@ public class UserController {
         Optional<User> userOptional = userRepository.findById(idUser);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return ResponseEntity.ok(new DataUserProfile(user.getArtistDescription(), user.getSocialMedia()));
+            return ResponseEntity.ok(new DataUserProfile(user.getArtistDescription(), user.getSocialMedia(), user.getUsername()));
         }
         return ResponseEntity.notFound().build();
     }
 
-    @PutMapping("/profile/{idUser}")
-    public ResponseEntity<?> updateProfile(@PathVariable("idUser") int idUser,
-            @RequestBody DataUserProfile userProfile) {
-        Optional<User> userOptional = userRepository.findById(idUser);
-        if (userOptional.isPresent()) {
+    @PutMapping("/update-profile/{idUser}")
+    public ResponseEntity<AuthenticationResponse> updateUsername(@PathVariable("idUser") int idUser, @RequestBody DataUserProfile request) {
+        try {
+            Optional<User> userOptional = userRepository.findById(idUser);
+            if (!userOptional.isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
             User user = userOptional.get();
-            user.setArtistDescription(userProfile.artistDescription());
-            user.setSocialMedia(userProfile.socialMedia());
-
+            user.setUsername(request.username());
+            user.setArtistDescription(request.artistDescription());
+            user.setSocialMedia(request.socialMedia());
             userRepository.save(user);
-            return ResponseEntity.ok().build();
+            System.out.println(user);
+            
+            // Generate new tokens using your existing JwtService
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+            
+            return ResponseEntity.ok(AuthenticationResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        return ResponseEntity.notFound().build();
     }
+
 
     @GetMapping("/{idUser}/videos/{videoId}")
     public ResponseEntity<VideoDTO> getVideoById(@PathVariable("idUser") long idUser,
