@@ -24,8 +24,21 @@ public interface VideoRepository extends JpaRepository<Video, Integer> {
     @Query("SELECT v FROM Video v WHERE v.videoStatus = com.randomrainbow.springboot.demosecurity.entity.VideoStatus.AVAILABLE AND v.duration <= :maxDuration")
     List<Video> findApprovedVideosByMaxDuration(int maxDuration);
 
+    // Get a random approved video by min duration
+    @Query("SELECT v FROM Video v WHERE v.videoStatus = com.randomrainbow.springboot.demosecurity.entity.VideoStatus.AVAILABLE AND v.duration >= :minDuration")
+    List<Video> findApprovedVideosByMinDuration(int minDuration);
+
     default Video getRandomApprovedVideoByDuration(int maxDurationSeconds) {
         List<Video> approvedVideos = findApprovedVideosByMaxDuration(maxDurationSeconds);
+        if (approvedVideos.isEmpty()) {
+            return null;
+        }
+        Random random = new Random();
+        return approvedVideos.get(random.nextInt(approvedVideos.size()));
+    }
+
+    default Video getRandomApprovedVideoByMinDuration(int minDurationSeconds) {
+        List<Video> approvedVideos = findApprovedVideosByMinDuration(minDurationSeconds);
         if (approvedVideos.isEmpty()) {
             return null;
         }

@@ -32,16 +32,32 @@ public class RandomController {
         return ResponseEntity.ok("i am breathing, said the server");
     }
 
-    @GetMapping("/{maxDuration}")
-    public ResponseEntity<?> getRandomVideo(@PathVariable int maxDuration) {
-        Video randomVideo = videoRepository.getRandomApprovedVideoByDuration(maxDuration);
-        if (randomVideo == null) {
-            return ResponseEntity.status(404).body("No approved videos found within the specified duration.");
+    @GetMapping("/{duration}")
+    public ResponseEntity<?> getRandomVideo(@PathVariable int duration) {
+        Video randomVideo;
+        if (duration > 0) {
+            // Positive number: treat as max duration (existing behavior)
+            randomVideo = videoRepository.getRandomApprovedVideoByDuration(duration);
+        } else {
+            // Negative number: treat as minimum duration
+            randomVideo = videoRepository.getRandomApprovedVideoByMinDuration(Math.abs(duration));
         }
         
-        VideoRandomResponse videoResponse = new VideoRandomResponse(randomVideo.getVideoLink(), randomVideo.getVideoDescription(), randomVideo.getUser().getUsername(), randomVideo.getTitle(), randomVideo.getEndpoint());
+        if (randomVideo == null) {
+            String message = duration > 0 
+                ? "No approved videos found under " + duration + " seconds."
+                : "No approved videos found over " + Math.abs(duration) + " seconds.";
+            return ResponseEntity.status(404).body(message);
+        }
+        
+        VideoRandomResponse videoResponse = new VideoRandomResponse(
+            randomVideo.getVideoLink(), 
+            randomVideo.getVideoDescription(), 
+            randomVideo.getUser().getUsername(), 
+            randomVideo.getTitle(), 
+            randomVideo.getEndpoint()
+        );
         return ResponseEntity.ok(videoResponse);
-
     }
 
     @GetMapping("/video/{token}")
