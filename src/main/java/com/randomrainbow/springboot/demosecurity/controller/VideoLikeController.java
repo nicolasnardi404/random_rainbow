@@ -69,8 +69,10 @@ public class VideoLikeController {
         }
     }
 
-    @GetMapping("/{videoId}/likes/count")
-    public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable int videoId) {
+    @GetMapping("/{videoId}/like")
+    public ResponseEntity<Map<String, Object>> getLikeInfo(
+            @PathVariable int videoId,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
         try {
             Video video = videoRepository.findById(videoId)
                 .orElseThrow(() -> new RuntimeException("Video not found"));
@@ -78,10 +80,18 @@ public class VideoLikeController {
             Map<String, Object> response = new HashMap<>();
             response.put("likeCount", likeRepository.countByVideo(video));
             
+            // If user is authenticated, add their like status
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String username = jwtService.extractUsername(token);
+                User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+                response.put("liked", likeRepository.existsByUserAndVideo(user, video));
+            }
+            
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
 } 

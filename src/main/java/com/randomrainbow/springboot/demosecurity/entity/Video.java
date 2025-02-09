@@ -58,7 +58,6 @@ public class Video {
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
     private Set<VideoLike> likes = new HashSet<>();
-
   
 
     @Override
@@ -186,5 +185,13 @@ public class Video {
 
     public int getLikesCount() {
         return likes.size();
+    }
+
+    public Set<VideoLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Set<VideoLike> likes) {
+        this.likes = likes;
     }
 }
