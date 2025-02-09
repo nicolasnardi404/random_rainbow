@@ -69,7 +69,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendPasswordResetEmail(User user, String resetToken) {
         try {
-            Long templateId = 3L; // Replace with your actual template ID
+            Long templateId = 4L; // Replace with your actual template ID
             SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
 
             // Set the recipient
