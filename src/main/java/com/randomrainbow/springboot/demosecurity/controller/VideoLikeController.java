@@ -69,4 +69,19 @@ public class VideoLikeController {
         }
     }
 
+    @GetMapping("/{videoId}/likes/count")
+    public ResponseEntity<Map<String, Object>> getLikeCount(@PathVariable int videoId) {
+        try {
+            Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new RuntimeException("Video not found"));
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("likeCount", likeRepository.countByVideo(video));
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 } 
