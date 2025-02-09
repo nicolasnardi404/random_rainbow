@@ -1,3 +1,5 @@
 random_rainbow/target/
 random_rainbow/target/classes/com/resources/
 .env
+latest.dump
+output.sql

@@ -55,7 +55,8 @@ public class RandomController {
             randomVideo.getVideoDescription(), 
             randomVideo.getUser().getUsername(), 
             randomVideo.getTitle(), 
-            randomVideo.getEndpoint()
+            randomVideo.getEndpoint(),
+            randomVideo.getId()
         );
         return ResponseEntity.ok(videoResponse);
     }
@@ -65,12 +66,18 @@ public class RandomController {
         Optional<Video> optionalVideo = videoRepository.findByEndpoint(token);
         if(optionalVideo.isPresent()){
             Video video = optionalVideo.get();
-            VideoRandomResponse videoResponse = new VideoRandomResponse(video.getVideoLink(), video.getVideoDescription(), video.getUser().getUsername(), video.getTitle(), video.getEndpoint());
+            VideoRandomResponse videoResponse = new VideoRandomResponse(
+                video.getVideoLink(), 
+                video.getVideoDescription(), 
+                video.getUser().getUsername(), 
+                video.getTitle(), 
+                video.getEndpoint(),
+                video.getId()
+            );
             return ResponseEntity.ok(videoResponse);
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/videosbyartist/{username}")

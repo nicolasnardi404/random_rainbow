@@ -1,6 +1,8 @@
 package com.randomrainbow.springboot.demosecurity.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "videos")
 public class Video {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -52,6 +55,9 @@ public class Video {
 
     @Column(name = "message_error")
     private String messageError;
+
+    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    private Set<VideoLike> likes = new HashSet<>();
 
   
 
@@ -168,5 +174,17 @@ public class Video {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public void addLike(VideoLike like) {
+        likes.add(like);
+    }
+
+    public void removeLike(VideoLike like) {
+        likes.remove(like);
+    }
+
+    public int getLikesCount() {
+        return likes.size();
     }
 }
