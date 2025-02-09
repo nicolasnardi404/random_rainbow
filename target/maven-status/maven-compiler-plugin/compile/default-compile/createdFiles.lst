@@ -1,3 +1,4 @@
+com/randomrainbow/springboot/demosecurity/service/VideoLikeService.class
 com/randomrainbow/springboot/demosecurity/dto/TokenRefreshRequest.class
 com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.class
 com/randomrainbow/springboot/demosecurity/dto/VideoRandomResponse.class
@@ -10,6 +11,7 @@ com/randomrainbow/springboot/demosecurity/service/SendinblueConfig.class
 com/randomrainbow/springboot/demosecurity/dto/DataUserProfile.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest.class
 com/randomrainbow/springboot/demosecurity/controller/LoginController.class
+com/randomrainbow/springboot/demosecurity/dto/VideoLikeResponse.class
 com/randomrainbow/springboot/demosecurity/util/CustomException.class
 com/randomrainbow/springboot/demosecurity/dto/VideoDuration.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationService.class
@@ -19,12 +21,14 @@ com/randomrainbow/springboot/demosecurity/service/EmailService.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest$RegisterRequestBuilder.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest$AuthenticationRequestBuilder.class
 com/randomrainbow/springboot/demosecurity/dto/VideoStatusUpdateRequest.class
+com/randomrainbow/springboot/demosecurity/controller/VideoLikeController.class
 com/randomrainbow/springboot/demosecurity/entity/User$UserBuilder.class
 com/randomrainbow/springboot/demosecurity/dao/RoleDao.class
 com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetResponse.class
 com/randomrainbow/springboot/demosecurity/controller/UserController.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationController.class
 com/randomrainbow/springboot/demosecurity/repository/VideoRepository.class
+com/randomrainbow/springboot/demosecurity/repository/VideoLikeRepository.class
 com/randomrainbow/springboot/demosecurity/dto/VideoErrorMessageUpdateRequest.class
 com/randomrainbow/springboot/demosecurity/dto/VideoDTO.class
 com/randomrainbow/springboot/demosecurity/util/Util.class
@@ -45,5 +49,6 @@ com/randomrainbow/springboot/demosecurity/service/UserServiceImpl.class
 com/randomrainbow/springboot/demosecurity/controller/RandomController.class
 com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetRequest.class
 com/randomrainbow/springboot/demosecurity/service/EmailServiceImpl.class
+com/randomrainbow/springboot/demosecurity/entity/VideoLike.class
 com/randomrainbow/springboot/demosecurity/controller/AdminController.class
 com/randomrainbow/springboot/demosecurity/DemosecurityApplication.class
