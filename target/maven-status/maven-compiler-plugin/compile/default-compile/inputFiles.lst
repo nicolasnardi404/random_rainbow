@@ -5,11 +5,14 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/User.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/LoginController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/Role.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/CommentRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/config/SecurityConfig.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/Comment.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/config/Webconfig.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/util/CustomException.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/DemoController.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/CommentResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/resetPassword/NewPasswordRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/VideoLikeService.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/EmailServiceImpl.java
@@ -30,6 +33,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/SendinblueConfig.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/AuthenticationService.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/JwtAuthentification.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/CommentController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/resetPassword/PasswordResetResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/VideoLikeController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/repository/VideoRepository.java
@@ -37,6 +41,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoLikeResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/VideoLike.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/repository/CommentRepository.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/Video.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/repository/VideoLikeRepository.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.java
