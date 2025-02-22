@@ -2,6 +2,7 @@ package com.randomrainbow.springboot.demosecurity.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.randomrainbow.springboot.demosecurity.dto.DataUserProfile;
 import com.randomrainbow.springboot.demosecurity.dto.UserProfileView;
 import com.randomrainbow.springboot.demosecurity.dto.VideoRandomResponse;
+import com.randomrainbow.springboot.demosecurity.dto.ArtistProfileDTO;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
@@ -85,17 +87,36 @@ public class RandomController {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            System.out.println("i am the user " + user);
-            DataUserProfile dataUserProfile = new DataUserProfile(user.getArtistDescription(), user.getSocialMedia(), user.getUsername());
-            System.out.println("i am think the error is down here");
-            List<Video> allVideosApprovedByArtist = videoRepository.findApprovedVideosByUserId(user.getId());
-            System.out.println("i am the error");
+            
+            // Create data user profile DTO
+            ArtistProfileDTO.ArtistDataUserProfileDTO dataUserProfile = 
+                new ArtistProfileDTO.ArtistDataUserProfileDTO(
+                    user.getArtistDescription(),
+                    user.getSocialMedia(),
+                    user.getUsername()
+                );
+            
+            // Convert videos to DTOs
+            List<ArtistProfileDTO.ArtistVideoDTO> videoDTOs = 
+                videoRepository.findApprovedVideosByUserId(user.getId())
+                    .stream()
+                    .map(video -> new ArtistProfileDTO.ArtistVideoDTO(
+                        video.getId(),
+                        video.getTitle(),
+                        video.getVideoStatus(),
+                        video.getEndpoint()
+                    ))
+                    .collect(Collectors.toList());
 
-            UserProfileView userProfileView = new UserProfileView(user.getUsername(), allVideosApprovedByArtist, dataUserProfile);
+            // Create final response
+            ArtistProfileDTO response = new ArtistProfileDTO(
+                user.getUsername(),
+                videoDTOs,
+                dataUserProfile
+            );
 
-            return ResponseEntity.ok(userProfileView);
-        } else {
-            return ResponseEntity.notFound().build(); 
+            return ResponseEntity.ok(response);
         }
+        return ResponseEntity.notFound().build();
     }
 }

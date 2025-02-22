@@ -1,6 +1,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/VideoDuration.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/util/Util.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/user/CreateUser.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/ArtistProfileDTO.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/UserController.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/entity/User.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/LoginController.java

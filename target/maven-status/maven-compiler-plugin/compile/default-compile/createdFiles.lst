@@ -2,8 +2,10 @@ com/randomrainbow/springboot/demosecurity/service/VideoLikeService.class
 com/randomrainbow/springboot/demosecurity/dto/TokenRefreshRequest.class
 com/randomrainbow/springboot/demosecurity/controller/VerifyEmail.class
 com/randomrainbow/springboot/demosecurity/dto/VideoRandomResponse.class
+com/randomrainbow/springboot/demosecurity/dto/ArtistProfileDTO$ArtistVideoDTO.class
 com/randomrainbow/springboot/demosecurity/config/SecurityConfig.class
 com/randomrainbow/springboot/demosecurity/dto/VideoWithEndpointDTO.class
+com/randomrainbow/springboot/demosecurity/dto/ArtistProfileDTO$ArtistDataUserProfileDTO.class
 com/randomrainbow/springboot/demosecurity/entity/Role.class
 com/randomrainbow/springboot/demosecurity/repository/CommentRepository.class
 com/randomrainbow/springboot/demosecurity/dto/CommentRequest.class
@@ -22,6 +24,7 @@ com/randomrainbow/springboot/demosecurity/dto/VideoWithEndpointAndErrorDTO.class
 com/randomrainbow/springboot/demosecurity/service/EmailService.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest$RegisterRequestBuilder.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest$AuthenticationRequestBuilder.class
+com/randomrainbow/springboot/demosecurity/dto/ArtistProfileDTO.class
 com/randomrainbow/springboot/demosecurity/dto/VideoStatusUpdateRequest.class
 com/randomrainbow/springboot/demosecurity/controller/VideoLikeController.class
 com/randomrainbow/springboot/demosecurity/entity/User$UserBuilder.class
