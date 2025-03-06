@@ -6,6 +6,7 @@ import com.randomrainbow.springboot.demosecurity.repository.ChatMessageRepositor
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.JwtService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,6 +31,19 @@ public class ChatController {
     public ResponseEntity<?> getMessages() {
         try {
             return ResponseEntity.ok(chatMessageRepository.findTop50ByOrderByTimestampDesc());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/messages/before/{messageId}")
+    public ResponseEntity<?> getMessagesBefore(
+            @PathVariable Long messageId,
+            @RequestParam(defaultValue = "10") int limit) {
+        try {
+            PageRequest pageRequest = PageRequest.of(0, limit);
+            List<ChatMessage> messages = chatMessageRepository.findByIdLessThanOrderByTimestampDesc(messageId, pageRequest);
+            return ResponseEntity.ok(messages);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
         }
