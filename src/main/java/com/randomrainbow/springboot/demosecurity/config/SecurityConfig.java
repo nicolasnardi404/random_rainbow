@@ -22,33 +22,65 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.util.StringUtils;
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class SecurityConfig {
+@EnableWebSocketMessageBroker
+public class SecurityConfig implements WebSocketMessageBrokerConfigurer {
 
     private final JwtAuthentification jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-     @Bean
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults());
-        http
-           .csrf(csrf -> csrf.disable()) 
-           .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/admin/**").hasRole("ADMIN")   
-            .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
-            .requestMatchers("/api/**").permitAll()
-            //    .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+        http.cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/ws/**", "/chat/**", "/topic/**", "/app/**", "/chat/info/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")   
+                .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/**").permitAll()
+                .anyRequest().authenticated()
             )
-           .sessionManagement(session -> session
-               .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-           .authenticationProvider(authenticationProvider) 
-        //    .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"))
-           .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); 
-           
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            
         return http.build();
+    }
+
+    @Override
+    public void configureMessageBroker(MessageBrokerRegistry config) {
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/app");
+    }
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/chat")
+            .setAllowedOrigins("http://localhost:3000")
+            .withSockJS();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

@@ -7,18 +7,32 @@ import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.service.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/api/chat")
 @AllArgsConstructor
 public class ChatController {
     private final ChatMessageRepository chatMessageRepository;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @GetMapping("/messages")
+    public ResponseEntity<?> getMessages() {
+        try {
+            return ResponseEntity.ok(chatMessageRepository.findTop50ByOrderByTimestampDesc());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/messages")
     public ResponseEntity<?> addMessage(
@@ -38,18 +52,18 @@ public class ChatController {
 
             ChatMessage savedMessage = chatMessageRepository.save(message);
             
+            // Broadcast the message to all connected clients
+            messagingTemplate.convertAndSend("/topic/messages", savedMessage);
+            
             return ResponseEntity.ok(savedMessage);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error sending message: " + e.getMessage());
         }
     }
 
-    @GetMapping("/messages")
-    public ResponseEntity<?> getMessages() {
-        try {
-            return ResponseEntity.ok(chatMessageRepository.findTop50ByOrderByTimestampDesc());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
-        }
+    @MessageMapping("/send")
+    @SendTo("/topic/messages")
+    public ChatMessage broadcastMessage(ChatMessage message) {
+        return message;
     }
 } 
