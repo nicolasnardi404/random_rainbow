@@ -10,6 +10,7 @@ com/randomrainbow/springboot/demosecurity/entity/Role.class
 com/randomrainbow/springboot/demosecurity/repository/CommentRepository.class
 com/randomrainbow/springboot/demosecurity/dto/CommentRequest.class
 com/randomrainbow/springboot/demosecurity/entity/User.class
+com/randomrainbow/springboot/demosecurity/controller/ChatController.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest.class
 com/randomrainbow/springboot/demosecurity/service/SendinblueConfig.class
 com/randomrainbow/springboot/demosecurity/dto/DataUserProfile.class
@@ -19,8 +20,8 @@ com/randomrainbow/springboot/demosecurity/dto/VideoLikeResponse.class
 com/randomrainbow/springboot/demosecurity/util/CustomException.class
 com/randomrainbow/springboot/demosecurity/dto/VideoDuration.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationService.class
-com/randomrainbow/springboot/demosecurity/config/Webconfig.class
 com/randomrainbow/springboot/demosecurity/dto/VideoWithEndpointAndErrorDTO.class
+com/randomrainbow/springboot/demosecurity/repository/ChatMessageRepository.class
 com/randomrainbow/springboot/demosecurity/service/EmailService.class
 com/randomrainbow/springboot/demosecurity/auth/RegisterRequest$RegisterRequestBuilder.class
 com/randomrainbow/springboot/demosecurity/auth/AuthenticationRequest$AuthenticationRequestBuilder.class
@@ -60,3 +61,4 @@ com/randomrainbow/springboot/demosecurity/entity/Comment.class
 com/randomrainbow/springboot/demosecurity/entity/VideoLike.class
 com/randomrainbow/springboot/demosecurity/controller/AdminController.class
 com/randomrainbow/springboot/demosecurity/DemosecurityApplication.class
+com/randomrainbow/springboot/demosecurity/entity/ChatMessage.class

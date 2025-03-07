@@ -25,13 +25,13 @@ public class ChatMessage {
     private Long id;
     
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
-    @Column(nullable = false)
+    @Column(name = "content", length = 300, nullable = false)
     private String content;
     
-    @Column(nullable = false)
+    @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
     
 }

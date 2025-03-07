@@ -76,6 +76,30 @@ public class ChatController {
         }
     }
 
+
+    @DeleteMapping("/messages/{id}")
+    public ResponseEntity<?> deleteMessage(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.substring(7);
+            String username = jwtService.extractUsername(token);
+
+            ChatMessage message = chatMessageRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Message not found"));
+
+            if (!message.getUser().getUsername().equals(username)) {
+                return ResponseEntity.status(403).body("You are not authorized to delete this message.");
+            }
+
+            chatMessageRepository.delete(message);
+
+            return ResponseEntity.ok("Message deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error deleting message: " + e.getMessage());
+        }
+    }
+
     @MessageMapping("/send")
     @SendTo("/topic/messages")
     public ChatMessage broadcastMessage(ChatMessage message) {
