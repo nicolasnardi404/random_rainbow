@@ -1,5 +1,6 @@
 package com.randomrainbow.springboot.demosecurity.controller;
 
+import com.randomrainbow.springboot.demosecurity.dto.ChatMessageDTO;
 import com.randomrainbow.springboot.demosecurity.entity.ChatMessage;
 import com.randomrainbow.springboot.demosecurity.entity.User;
 import com.randomrainbow.springboot.demosecurity.repository.ChatMessageRepository;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/chat")
@@ -30,7 +32,11 @@ public class ChatController {
     @GetMapping("/messages")
     public ResponseEntity<?> getMessages() {
         try {
-            return ResponseEntity.ok(chatMessageRepository.findTop50ByOrderByTimestampDesc());
+            List<ChatMessage> messages = chatMessageRepository.findTop50ByOrderByTimestampDesc();
+            List<ChatMessageDTO> messageDTOs = messages.stream()
+                .map(ChatMessageDTO::fromEntity)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(messageDTOs);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
         }
@@ -43,7 +49,10 @@ public class ChatController {
         try {
             PageRequest pageRequest = PageRequest.of(0, limit);
             List<ChatMessage> messages = chatMessageRepository.findByIdLessThanOrderByTimestampDesc(messageId, pageRequest);
-            return ResponseEntity.ok(messages);
+            List<ChatMessageDTO> messageDTOs = messages.stream()
+                .map(ChatMessageDTO::fromEntity)
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(messageDTOs);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
         }
@@ -66,16 +75,16 @@ public class ChatController {
             message.setTimestamp(LocalDateTime.now());
 
             ChatMessage savedMessage = chatMessageRepository.save(message);
+            ChatMessageDTO messageDTO = ChatMessageDTO.fromEntity(savedMessage);
             
-            // Broadcast the message to all connected clients
-            messagingTemplate.convertAndSend("/topic/messages", savedMessage);
+            // Broadcast the DTO to all connected clients
+            messagingTemplate.convertAndSend("/topic/messages", messageDTO);
             
-            return ResponseEntity.ok(savedMessage);
+            return ResponseEntity.ok(messageDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error sending message: " + e.getMessage());
         }
     }
-
 
     @DeleteMapping("/messages/{id}")
     public ResponseEntity<?> deleteMessage(
@@ -102,7 +111,7 @@ public class ChatController {
 
     @MessageMapping("/send")
     @SendTo("/topic/messages")
-    public ChatMessage broadcastMessage(ChatMessage message) {
-        return message;
+    public ChatMessageDTO broadcastMessage(ChatMessage message) {
+        return ChatMessageDTO.fromEntity(message);
     }
 } 

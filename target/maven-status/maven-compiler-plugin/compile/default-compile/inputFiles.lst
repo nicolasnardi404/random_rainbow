@@ -13,6 +13,7 @@
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/util/CustomException.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/AuthenticationResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/controller/DemoController.java
+/Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/ChatMessageDTO.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/dto/CommentResponse.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/auth/resetPassword/NewPasswordRequest.java
 /Users/esquizociborgue/Documents/code/random_rainbow/random_rainbow/src/main/java/com/randomrainbow/springboot/demosecurity/service/VideoLikeService.java

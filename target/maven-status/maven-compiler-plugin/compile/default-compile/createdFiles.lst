@@ -8,6 +8,7 @@ com/randomrainbow/springboot/demosecurity/dto/VideoWithEndpointDTO.class
 com/randomrainbow/springboot/demosecurity/dto/ArtistProfileDTO$ArtistDataUserProfileDTO.class
 com/randomrainbow/springboot/demosecurity/entity/Role.class
 com/randomrainbow/springboot/demosecurity/repository/CommentRepository.class
+com/randomrainbow/springboot/demosecurity/dto/ChatMessageDTO.class
 com/randomrainbow/springboot/demosecurity/dto/CommentRequest.class
 com/randomrainbow/springboot/demosecurity/entity/User.class
 com/randomrainbow/springboot/demosecurity/controller/ChatController.class

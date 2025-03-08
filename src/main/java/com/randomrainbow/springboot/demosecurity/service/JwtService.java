@@ -20,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 30; // 30 minutes
+    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60 * 24; // 30 minutes
     private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7; // 1 week
 
     // Generate Access Token
