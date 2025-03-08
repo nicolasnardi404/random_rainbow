@@ -10,4 +10,6 @@ public interface EmailService  {
     void sendVerificationEmail(User user, String token);
 
     void sendPasswordResetEmail(User user, String resetToken);
+    
+    void sendVideoApprovalEmail(User user, String videoTitle, String videoUrl);
 }

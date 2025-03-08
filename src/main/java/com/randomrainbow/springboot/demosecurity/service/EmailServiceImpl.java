@@ -92,4 +92,32 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send password reset email", e);
         }
     }
+    
+    @Override
+    public void sendVideoApprovalEmail(User user, String videoTitle, String videoUrl) {
+        try {
+            Long templateId = 5L; // You'll need to create a template in Brevo for video approval
+            SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
+
+            // Set the recipient
+            List<SendSmtpEmailTo> toList = List.of(new SendSmtpEmailTo().email(user.getEmail()));
+            sendSmtpEmail.setTo(toList);
+
+            // Set the template ID
+            sendSmtpEmail.setTemplateId(templateId);
+
+            // Add template variables
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("video_title", videoTitle);
+            params.put("video_url", videoUrl);
+            sendSmtpEmail.setParams(params);
+
+            // Send the email
+            brevoApi.sendTransacEmail(sendSmtpEmail);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send video approval email", e);
+        }
+    }
 }

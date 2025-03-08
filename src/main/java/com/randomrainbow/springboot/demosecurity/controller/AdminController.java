@@ -24,6 +24,7 @@ import com.randomrainbow.springboot.demosecurity.dto.VideoWithEndpointDTO;
 import com.randomrainbow.springboot.demosecurity.entity.Video;
     import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
     import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
+import com.randomrainbow.springboot.demosecurity.service.EmailService;
 import com.randomrainbow.springboot.demosecurity.util.Util;
 
 import jakarta.transaction.Transactional;
@@ -34,6 +35,7 @@ import jakarta.transaction.Transactional;
     @RequestMapping("/api/admin")
     public class AdminController {
         private VideoRepository videoRepository;
+        private EmailService emailService;
 
         @GetMapping("/allvideos")
         public ResponseEntity<List<VideoWithEndpointDTO>> getAllVideos(){
@@ -102,15 +104,45 @@ import jakarta.transaction.Transactional;
             if (videoOptional.isPresent()) {
                 Video video = videoOptional.get();
                 video.setVideoStatus(statusUpdate.videoStatus());
+                
+                // If the video is being approved, set the approved date and send notification email
+                if (statusUpdate.videoStatus() == VideoStatus.AVAILABLE) {
+                    video.setApprovedDate(new Date());
+                    // Send email notification to the user
+                    try {
+                        // Create a custom method to send video approval notification
+                        sendVideoApprovalEmail(video);
+                    } catch (Exception e) {
+                        // Log the error but continue with the approval process
+                        System.err.println("Failed to send approval email: " + e.getMessage());
+                    }
+                }
+                
                 if (statusUpdate.error() != null) {
                     video.setMessageError(statusUpdate.error());
+                }
+                videoRepository.save(video);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.notFound().build();
             }
-            videoRepository.save(video);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
-    }
+
+        /**
+         * Helper method to send an email notification when a video is approved
+         */
+        private void sendVideoApprovalEmail(Video video) {
+            // Get the user who uploaded the video
+            if (video != null && video.getIdUser() != null) {
+                // Create a custom email for video approval notification
+                String videoTitle = video.getTitle();
+                String videoEndpoint = video.getEndpoint();
+                String videoUrl = "http://www.randomrainbow.art/home/" + videoEndpoint;
+                
+                // Use the existing email service to send a notification
+                emailService.sendVideoApprovalEmail(video.getIdUser(), videoTitle, videoUrl);
+            }
+        }
 
         @PutMapping("/videos/duration/{id}")
         public ResponseEntity<Video> setVideoDuration(@PathVariable int id, @RequestBody VideoDuration videoDuration) {
