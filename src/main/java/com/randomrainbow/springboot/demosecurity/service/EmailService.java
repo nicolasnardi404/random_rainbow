@@ -12,4 +12,6 @@ public interface EmailService  {
     void sendPasswordResetEmail(User user, String resetToken);
     
     void sendVideoApprovalEmail(User user, String videoTitle, String videoUrl);
+    
+    void sendNewVideoNotificationToAdmin(User user, String videoTitle, String videoLink);
 }

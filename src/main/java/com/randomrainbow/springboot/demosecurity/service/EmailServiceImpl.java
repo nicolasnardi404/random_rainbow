@@ -24,6 +24,9 @@ public class EmailServiceImpl implements EmailService {
 
     private final Environment environment;
     private TransactionalEmailsApi brevoApi;
+    
+    @Value("${admin.email}")
+    private String adminEmail;
 
      @Autowired
     public EmailServiceImpl(Environment environment) {
@@ -118,6 +121,35 @@ public class EmailServiceImpl implements EmailService {
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to send video approval email", e);
+        }
+    }
+    
+    @Override
+    public void sendNewVideoNotificationToAdmin(User user, String videoTitle, String videoLink) {
+        try {
+            Long templateId = 6L; // You'll need to create a template in Brevo for admin notifications
+            SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
+
+            // Set the recipient (admin email)
+            List<SendSmtpEmailTo> toList = List.of(new SendSmtpEmailTo().email(adminEmail));
+            sendSmtpEmail.setTo(toList);
+
+            // Set the template ID
+            sendSmtpEmail.setTemplateId(templateId);
+
+            // Add template variables
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", user.getUsername());
+            params.put("video_title", videoTitle);
+            params.put("video_link", "http://www.randomrainbow.art/home/" + videoLink);
+            params.put("admin_url", "http://www.randomrainbow.art/admin-controller");
+            sendSmtpEmail.setParams(params);
+
+            // Send the email
+            brevoApi.sendTransacEmail(sendSmtpEmail);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send admin notification email", e);
         }
     }
 }

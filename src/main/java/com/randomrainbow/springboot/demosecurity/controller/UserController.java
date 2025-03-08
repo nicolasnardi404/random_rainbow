@@ -10,6 +10,7 @@ import com.randomrainbow.springboot.demosecurity.entity.Video;
 import com.randomrainbow.springboot.demosecurity.entity.VideoStatus;
 import com.randomrainbow.springboot.demosecurity.repository.UserRepository;
 import com.randomrainbow.springboot.demosecurity.repository.VideoRepository;
+import com.randomrainbow.springboot.demosecurity.service.EmailService;
 import com.randomrainbow.springboot.demosecurity.util.Util;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +37,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
     private final JwtService jwtService;
+    private final EmailService emailService;
 
     @GetMapping("/{idUser}/videos")
     public ResponseEntity<List<VideoWithEndpointAndErrorDTO>> getUserVideos(@PathVariable("idUser") Long idUser) {
@@ -160,12 +162,20 @@ public class UserController {
             newVideo.setVideoStatus(VideoStatus.UNCHECKED);
             newVideo.setEndpoint(Util.randomString());
 
-            videoRepository.save(newVideo);
+            Video savedVideo = videoRepository.save(newVideo);
+            
+            // Send email notification to admin
+            try {
+                emailService.sendNewVideoNotificationToAdmin(user, savedVideo.getTitle(), savedVideo.getEndpoint());
+            } catch (Exception e) {
+                // Log the error but continue with the video submission process
+                System.err.println("Failed to send admin notification email: " + e.getMessage());
+            }
+            
             return ResponseEntity.ok().build();
 
         } else
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-
     }
 
     @DeleteMapping("/{idUser}/videos/delete/{videoId}")
